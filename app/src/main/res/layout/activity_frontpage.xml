@@ -20,25 +20,31 @@
         android:layout_alignParentRight="true"
         android:fillViewport="false">
 
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButtonMenuIcon"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="left" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButtonSearch"
 
-            android:layout_alignTop="@+id/toolbarView"
-            android:layout_alignEnd="@+id/toolbarView"
+
             android:adjustViewBounds="false"
-            android:clickable="false" />
+            android:clickable="false"
+            android:layout_gravity="right" />
 
-
+        </LinearLayout>
     </Toolbar>
-
 
 
 
