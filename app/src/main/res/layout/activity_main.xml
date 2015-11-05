@@ -9,12 +9,48 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+    <Toolbar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbarView"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:fillViewport="false">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonMenuIcon"
+            android:layout_alignParentLeft="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonSearch"
+
+            android:layout_alignTop="@+id/toolbarView"
+            android:layout_alignEnd="@+id/toolbarView"
+            android:adjustViewBounds="false"
+            android:clickable="false" />
+
+
+    </Toolbar>
+
+
+
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/toolbarView">
 
+
+        
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -22,16 +58,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:weightSum="1">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="17dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:backgroundTint="#439cff"
-                android:layout_weight="0.05"></LinearLayout>
-
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,7 +70,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
+                android:id="@+id/EditTextItemNr"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
@@ -57,7 +84,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText1"
+                android:id="@+id/editTextBetegnelse"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
@@ -72,7 +99,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/editText2"
+                android:id="@+id/EditTextRecieveDate"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
@@ -87,7 +114,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText3"
+                android:id="@+id/editTextDatingFrom"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.06" />
 
@@ -103,7 +130,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText4"
+                android:id="@+id/editTextDatingTo"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.05" />
 
@@ -119,7 +146,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText5"
+                android:id="@+id/editTextDescription"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.05" />
 
@@ -134,7 +161,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText6"
+                android:id="@+id/editTextRef.Donator"
                 android:layout_gravity="center_horizontal" />
 
             <TextView
@@ -148,7 +175,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText7"
+                android:id="@+id/editTextRef.Producer"
                 android:layout_gravity="center_horizontal"/>
 
             <TextView
@@ -162,7 +189,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText8"
+                android:id="@+id/editTextGeoArea"
                 android:layout_gravity="center_horizontal"/>
 
             <TextView
@@ -176,10 +203,13 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText9"
+                android:id="@+id/editTextItemSubjects"
                 android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
     </ScrollView>
+
+
+
 
 </RelativeLayout>
