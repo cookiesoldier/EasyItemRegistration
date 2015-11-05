@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ImageButton;
 
-public class MainActivity extends Activity {
+public class FrontPage extends Activity {
 
     ImageButton MenuButton;
     ImageButton SearchButton;
