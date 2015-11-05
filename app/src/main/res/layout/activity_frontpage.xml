@@ -9,213 +9,237 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <Toolbar
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbarView"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:fillViewport="false">
+        android:layout_height="fill_parent">
 
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <Toolbar
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        <ImageButton
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButtonMenuIcon"
-            android:layout_alignParentLeft="true"
-            android:layout_gravity="left" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageButtonSearch"
-
-
-            android:adjustViewBounds="false"
-            android:clickable="false"
-            android:layout_gravity="right" />
-
-        </LinearLayout>
-    </Toolbar>
-
-
-
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/toolbarView">
-
-
-        
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/toolbarView"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentStart="false"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:weightSum="1">
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView"
-                android:layout_gravity="center_horizontal"
-                android:text="genstands nr" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:background="#1277e3">
 
-            <EditText
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/EditTextItemNr"
-                android:layout_gravity="center_horizontal" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Betegnelse"
-                android:id="@+id/textView1"
-                android:layout_gravity="center_horizontal" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButtonMenuIcon"
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextBetegnelse"
-                android:layout_gravity="center_horizontal" />
+                    android:layout_alignParentLeft="true"
+                     />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="ModtagelsesDato"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButtonSearch"
 
-            <EditText
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+
+        </Toolbar>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentEnd="false"
+            android:layout_below="@+id/toolbarView"
+            android:fillViewport="false">
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/EditTextRecieveDate"
-                android:layout_gravity="center_horizontal" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:weightSum="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Datering fra"
-                android:id="@+id/textView3"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/textView"
+                    android:layout_gravity="center_horizontal"
+                    android:text="genstands nr" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextDatingFrom"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.06" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/EditTextItemNr"
+                    android:layout_gravity="center_horizontal" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Datering til"
-                android:id="@+id/textView4"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Betegnelse"
+                    android:id="@+id/textView1"
+                    android:layout_gravity="center_horizontal" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextDatingTo"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextBetegnelse"
+                    android:layout_gravity="center_horizontal" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Beskrivelse"
-                android:id="@+id/textView5"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="ModtagelsesDato"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextDescription"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.05" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/EditTextRecieveDate"
+                    android:layout_gravity="center_horizontal" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Ref. til Donator"
-                android:id="@+id/textView6"
-                android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Datering fra"
+                    android:id="@+id/textView3"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextRef.Donator"
-                android:layout_gravity="center_horizontal" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextDatingFrom"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.06" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Ref. til producent"
-                android:id="@+id/textView7"
-                android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Datering til"
+                    android:id="@+id/textView4"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextRef.Producer"
-                android:layout_gravity="center_horizontal"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextDatingTo"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Geografisk område"
-                android:id="@+id/textView8"
-                android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Beskrivelse"
+                    android:id="@+id/textView5"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextGeoArea"
-                android:layout_gravity="center_horizontal"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextDescription"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="item subjects"
-                android:id="@+id/textView9"
-                android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Ref. til Donator"
+                    android:id="@+id/textView6"
+                    android:layout_gravity="center_horizontal" />
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextItemSubjects"
-                android:layout_gravity="center_horizontal"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextRef.Donator"
+                    android:layout_gravity="center_horizontal" />
 
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Ref. til producent"
+                    android:id="@+id/textView7"
+                    android:layout_gravity="center_horizontal" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextRef.Producer"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Geografisk område"
+                    android:id="@+id/textView8"
+                    android:layout_gravity="center_horizontal"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextGeoArea"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="item subjects"
+                    android:id="@+id/textView9"
+                    android:layout_gravity="center_horizontal"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editTextItemSubjects"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Toolbar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottomToolbarView"
+            android:minHeight="50dp"
+            android:layout_alignTop="@+id/scrollView">
 
 
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom">
+
+
+                <ImageButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/imageButtonCamera"
+                    android:src="@mipmap/cameraicon" />
+
+            </RelativeLayout>
+        </Toolbar>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

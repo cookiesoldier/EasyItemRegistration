@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ImageButton;
 
-public class FrontPage extends Activity {
+public class FrontPageActivity extends Activity {
 
     ImageButton MenuButton;
     ImageButton SearchButton;
@@ -16,7 +16,7 @@ public class FrontPage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_frontpage);
 
 
         MenuButton = (ImageButton) findViewById(R.id.imageButtonMenuIcon);
