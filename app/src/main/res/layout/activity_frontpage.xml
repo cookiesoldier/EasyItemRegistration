@@ -41,6 +41,7 @@
         android:orientation="vertical"
         android:layout_below="@id/toolbarView"
         android:id="@+id/linearLayout">
+
     <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -200,13 +201,29 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/editTextItemSubjects"
                     android:layout_gravity="center_horizontal"/>
-                <ImageButton
+
+                <Toolbar
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButtonCamera"
-                    android:src="@mipmap/cameraicon"
+                    android:id="@+id/toolbarViewBottom"
+                    android:background="#1277e3">
 
-                    />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageButtonCamera"
+                            android:src="@mipmap/cameraicon"
+                            android:layout_centerHorizontal="true"
+
+                            />
+                    </RelativeLayout>
+
+
+                     </Toolbar>
             </LinearLayout>
 
         </ScrollView>
