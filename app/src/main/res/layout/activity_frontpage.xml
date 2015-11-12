@@ -22,14 +22,15 @@
                     android:id="@+id/imageButtonMenuIcon"
 
                     android:layout_alignParentLeft="true"
-                     />
+                    android:background="#1277e3" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageButtonSearch"
 
-                    android:layout_alignParentRight="true" />
+                    android:layout_alignParentRight="true"
+                    android:background="#1277e3" />
             </RelativeLayout>
 
 
@@ -212,14 +213,40 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageButtonCamerafolder"
+                            android:src="@drawable/ic_camerafolder"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+
+                            android:background="#1277e3" />
+
                         <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/imageButtonCamera"
                             android:src="@mipmap/cameraicon"
                             android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
 
-                            />
+                            android:background="#1277e3" />
+
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageButtonDone"
+                            android:src="@drawable/ic_done"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+
+                            android:background="#1277e3" />
+
+
+
                     </RelativeLayout>
 
 
