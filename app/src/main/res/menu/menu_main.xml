@@ -3,11 +3,18 @@
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="100"
         android:showAsAction="never" />
     <item
         android:id="@+id/choosefromgallery"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="Choose Photo From Gallery"
+        android:titleCondensed="Choose Photo..."
         android:icon="@android:drawable/ic_menu_gallery"/>
+    <item
+        android:id="@+id/search"
+        android:showAsAction="always"
+        android:title="Search registrations"
+        android:icon="@android:drawable/ic_menu_search"/>
 </menu>

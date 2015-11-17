@@ -47,11 +47,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
 
+        /*
         btnMenu = (ImageButton) findViewById(R.id.imageButtonMenuIcon);
         btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
+        btnMenu.setImageResource(R.drawable.ic_burgermenu);
+        btnSearch.setImageResource(R.drawable.ic_search);
+        */
+
         btnSelectGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
@@ -59,8 +64,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener{
 
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
 
-        btnMenu.setImageResource(R.drawable.ic_burgermenu);
-        btnSearch.setImageResource(R.drawable.ic_search);
+
         btnSelectGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
         btnSelectGalleryPhoto.setOnClickListener(this);
@@ -69,8 +73,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //super.onCreateOptionsMenu(menu); // standard menuer
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu); // standard menuer
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -82,8 +86,17 @@ public class FrontPageActivity extends Activity implements View.OnClickListener{
             System.out.println("abc abc abc");
             startActivity(new Intent(FrontPageActivity.this, ImageGalleryActivity.class));
             */
+
+            /*
             Intent selectImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
             startActivityForResult(selectImageIntent, IMAGE_SELECT);
+            */
+
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,"Select Picture"), IMAGE_SELECT);
         }
         if(v == gotocamera || v == btnGotoCamera) {
             /*
