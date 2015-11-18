@@ -25,10 +25,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CameraFolderActivity"
-            android:label="@string/title_activity_camera_folder" >
-        </activity>
-        <activity
             android:name=".ImageGalleryActivity"
             android:label="@string/title_activity_image_gallery" >
         </activity>

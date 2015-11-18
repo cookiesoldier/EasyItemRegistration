@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
+
+    <!--
+    Følgende kode er lånt fra følgende guide: http://stackoverflow.com/questions/23426113/how-to-select-multiple-images-from-gallery-in-android svar nr 2
+
+    -->
+
+
     <GridView
         android:id="@+id/grdImages"
         android:layout_width="match_parent"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,7 +16,16 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
+
+
 public class ImageGalleryActivity extends Activity implements View.OnClickListener {
+
+    /*
+    Alt dette er lånt fra
+    Følgende kode er lånt fra følgende guide: http://stackoverflow.com/questions/23426113/how-to-select-multiple-images-from-gallery-in-android svar nr 2
+
+    */
 
     private LinearLayout lnrImages;
     private Button btnAddPhots;
@@ -29,7 +39,9 @@ public class ImageGalleryActivity extends Activity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_image_gallery);
+
 
         lnrImages = (LinearLayout)findViewById(R.id.lnrImages);
 

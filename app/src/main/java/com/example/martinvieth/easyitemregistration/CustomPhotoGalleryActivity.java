@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,8 +21,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+
 public class CustomPhotoGalleryActivity extends Activity {
 
+    /*
+    Følgende kode er lånt fra følgende guide: http://stackoverflow.com/questions/23426113/how-to-select-multiple-images-from-gallery-in-android svar nr 2
+    */
         private GridView grdImages;
         private Button btnSelect;
 
@@ -37,7 +42,9 @@ public class CustomPhotoGalleryActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.custom_gallery);
+
 
             grdImages= (GridView) findViewById(R.id.grdImages);
             btnSelect= (Button) findViewById(R.id.btnSelect);
