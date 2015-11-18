@@ -6,6 +6,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -43,19 +44,18 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     ImageView photoThumb2;
     ImageView photoThumb3;
 
-    EditText edtItemNr;
-    EditText edtBetegnelse;
+    EditText edtItemHeadline;
+    EditText edtBeskrivelse;
     EditText edtRecieveDate;
     EditText edtDatingFrom;
     EditText edtDatingTo;
-    EditText edtDescription;
     EditText edtRefDonator;
     EditText edtTextRefProducer;
     EditText edtGeoArea;
     EditText edtItemSubjects;
 
     //De valgte billeder
-    List<Bitmap> acceptedImages= new ArrayList<>();
+    List<Bitmap> acceptedImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,18 +82,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSelectGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
 
-
-
-        edtItemNr = (EditText) findViewById(R.id.EditTextItemNr);
-        edtBetegnelse = (EditText) findViewById(R.id.editTextBetegnelse);
+        edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
+        edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
         edtRecieveDate = (EditText) findViewById(R.id.EditTextRecieveDate);
         edtDatingFrom = (EditText) findViewById(R.id.editTextDatingFrom);
         edtDatingTo = (EditText) findViewById(R.id.editTextDatingTo);
-        edtDescription = (EditText) findViewById(R.id.editTextDescription);
         edtRefDonator = (EditText) findViewById(R.id.editTextRef_Donator);
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
-        edtItemSubjects = (EditText) findViewById(R.id.editTextItemSubjects);
 
         btnSelectGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
@@ -124,7 +120,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent,"Select Picture"), IMAGE_SELECT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_SELECT);
         }
         if (v == btnGotoCamera) {
             /*
@@ -138,21 +134,53 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
-        if(v == btnAccept){
-          registreringsDTO registrering =  new registreringsDTO(edtItemNr.getText().toString(),
-                                                                edtBetegnelse.getText().toString(),
-                                                                edtRecieveDate.getText().toString(),
-                                                                edtDatingFrom.getText().toString(),
-                                                                edtDatingTo.getText().toString(),
-                                                                edtDescription.getText().toString(),
-                                                                edtRefDonator.getText().toString(),
-                                                                edtTextRefProducer.getText().toString(),
-                                                                edtGeoArea.getText().toString(),
-                                                                edtItemSubjects.getText().toString(),
-                                                                acceptedImages);
+        if (v == btnAccept) {
+            final databaseDAO dataDAO = new databaseDAO();
+
+
+            new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object... executeParametre) {
+                    try {
+                        dataDAO.createItem(dublinCoreData());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return "færdig!";  // <5>
+                }
+
+                @Override
+                protected void onProgressUpdate(Object... progress) {
+
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+
+                }
+            }.execute(100); // <1>
+
+
+
 
 
         }
+    }
+
+    private registreringsDTO dublinCoreData() {
+
+
+          registreringsDTO registrering =  new registreringsDTO(edtItemHeadline.getText().toString(),
+                                                                edtBeskrivelse.getText().toString(),
+                                                                edtRecieveDate.getText().toString(),
+                                                                edtDatingFrom.getText().toString(),
+                                                                edtDatingTo.getText().toString(),
+                                                                edtRefDonator.getText().toString(),
+                                                                edtTextRefProducer.getText().toString(),
+                                                                edtGeoArea.getText().toString(),
+                                                                acceptedImages);
+
+        return registrering;
     }
 
 
