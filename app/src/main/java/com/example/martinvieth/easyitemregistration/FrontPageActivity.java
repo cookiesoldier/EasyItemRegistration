@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +53,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtRefDonator;
     EditText edtTextRefProducer;
     EditText edtGeoArea;
-    EditText edtItemSubjects;
+
 
     //De valgte billeder
     List<Bitmap> acceptedImages = new ArrayList<>();
@@ -136,13 +137,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
         if (v == btnAccept) {
             final databaseDAO dataDAO = new databaseDAO();
-
-
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
-                        dataDAO.createItem(dublinCoreData());
+                        if (dataDAO.createItem(getDataAndFiles())) {
+                            return "succes";
+                        } else {
+                            return "failed";
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -156,29 +160,47 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                 @Override
                 protected void onPostExecute(Object result) {
+                    //inform user item was added and delete the data and files so new can be added or if it failed
+                    if (result.equals("succes")) {
+                        deleteDataAndFiles();
+                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                    } else if (result.equals("failed")) {
+                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
+                    }
 
                 }
-            }.execute(100); // <1>
-
-
-
-
-
+            }.execute(100);
         }
     }
 
-    private registreringsDTO dublinCoreData() {
+    private void deleteDataAndFiles() {
+        edtItemHeadline.setText("");
+        edtItemHeadline.setText("");
+        edtBeskrivelse.setText("");
+        edtRecieveDate.setText("");
+        edtDatingFrom.setText("");
+        edtDatingTo.setText("");
+        edtRefDonator.setText("");
+        edtTextRefProducer.setText("");
+        edtGeoArea.setText("");
+        acceptedImages.clear();
+
+    }
+
+    private registreringsDTO getDataAndFiles() {
 
 
-          registreringsDTO registrering =  new registreringsDTO(edtItemHeadline.getText().toString(),
-                                                                edtBeskrivelse.getText().toString(),
-                                                                edtRecieveDate.getText().toString(),
-                                                                edtDatingFrom.getText().toString(),
-                                                                edtDatingTo.getText().toString(),
-                                                                edtRefDonator.getText().toString(),
-                                                                edtTextRefProducer.getText().toString(),
-                                                                edtGeoArea.getText().toString(),
-                                                                acceptedImages);
+        registreringsDTO registrering = new registreringsDTO(edtItemHeadline.getText().toString(),
+                edtBeskrivelse.getText().toString(),
+                edtRecieveDate.getText().toString(),
+                edtDatingFrom.getText().toString(),
+                edtDatingTo.getText().toString(),
+                edtRefDonator.getText().toString(),
+                edtTextRefProducer.getText().toString(),
+                edtGeoArea.getText().toString(),
+                acceptedImages);
 
         return registrering;
     }

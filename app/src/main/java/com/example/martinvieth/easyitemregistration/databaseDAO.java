@@ -81,7 +81,7 @@ public class databaseDAO {
 
     }
 
-    public void createItem(registreringsDTO data) throws IOException {
+    public boolean createItem(registreringsDTO data) throws IOException {
 
         //to add a new item we use the registrerings DTO that holds the data we wish to use.
         //First we are gonna build the message to send to the server.
@@ -94,7 +94,7 @@ public class databaseDAO {
                 +"&donator="+data.getRefDonator()
                 +"&producer="+data.getRefProducer()
                 +"&postnummer="+data.getGeoArea());
-
+        int response = 0;
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
         try {
@@ -105,27 +105,95 @@ public class databaseDAO {
 
 
             urlConnection.connect();
-            int response = urlConnection.getResponseCode();
+            response = urlConnection.getResponseCode();
             Log.d("Server response ----->", "The response is: " + response);
 
 
-            //InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-            // return readStream(in);
+        } finally {
+            urlConnection.disconnect();
+            Log.d("Server response ----->", "The response is: " + response);
+            if(response == 200 || response == 201){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+
+
+    }
+
+    public boolean updateItem(registreringsDTO data)throws IOException {
+
+
+        //To update a item we simply take the new dublincore data and overwrite the excisting.
+        //For picture it should be possible to get the excisting ones and add new pictures to these.
+        //but not yet since database can't handle pictures atm.
+        url = new URL(urlString + "/items/"
+                +data.getItemNr()+"?"
+                +"itemheadline="+data.getItemHeadline()
+                +"&itemdescription="+data.getBeskrivelse()
+                +"&itemrecieved="+data.getRecieveDate()
+                +"&itemdatafrom="+data.getDatingFrom()
+                +"&itemdatingto="+data.getDatingTo()
+                +"&donator="+data.getRefDonator()
+                +"&producer="+data.getRefProducer()
+                +"&postnummer="+data.getGeoArea());
+        int response = 0;
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        try {
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setRequestMethod("PUT");
+            urlConnection.setDoInput(true);
+
+
+            urlConnection.connect();
+            response = urlConnection.getResponseCode();
+            Log.d("Server response ----->", "The response is: " + response);
+
+        } finally {
+            urlConnection.disconnect();
+
+            if(response == 200 || response == 201){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+
+    }
+
+    public void deleteItem(int itemNr) throws IOException {
+
+
+        //To update a item we simply take the new dublincore data and overwrite the excisting.
+        //For picture it should be possible to get the excisting ones and add new pictures to these.
+        //but not yet since database can't handle pictures atm.
+        url = new URL(urlString + "/items/"+Integer.toString(itemNr));
+
+        int response = 0;
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+        try {
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setRequestMethod("DELETE");
+            urlConnection.setDoInput(true);
+
+
+            urlConnection.connect();
+            response = urlConnection.getResponseCode();
+            Log.d("Server response ----->", "The response is: " + response);
 
         } finally {
             urlConnection.disconnect();
         }
 
 
-    }
-
-    public void updateItem(registreringsDTO data) {
-
-
-    }
-
-    public void deleteItem() {
 
     }
 
