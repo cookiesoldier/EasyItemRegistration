@@ -6,4 +6,5 @@
     <string name="title_activity_camera_folder">CameraFolderActivity</string>
     <string name="title_activity_image_gallery">ImageGalleryActivity</string>
     <string name="title_activity_custom_photo_gallery" />
+    <string name="title_activity_item_list">ItemListActivity</string>
 </resources>

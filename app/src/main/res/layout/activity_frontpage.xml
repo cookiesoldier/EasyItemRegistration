@@ -43,6 +43,23 @@
         <!-- android:layout_below="@id/toolbarView" -->
 
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#1277e3" >
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageButtonSearch"
+                android:src="@drawable/ic_search"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:background="#1277e3" />
+
+        </LinearLayout>
+
         <ScrollView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -203,8 +220,7 @@
                 android:id="@+id/photoThumb"
                 android:layout_marginLeft="35dp"
                 android:theme="@style/myImageView"
-                android:layout_alignLeft="@+id/imageButtonCamerafolder"
-                android:src="@android:drawable/ic_menu_gallery" />
+                android:layout_alignLeft="@+id/imageButtonCamerafolder" />
 
 
             <ImageButton
@@ -212,6 +228,7 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/imageButtonCamerafolder"
                 android:src="@drawable/ic_camerafolder"
+                android:clickable="true"
                 android:layout_centerVertical="true"
                 android:background="#1277e3" />
 
@@ -220,6 +237,7 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/imageButtonCamera"
                 android:src="@mipmap/cameraicon"
+                android:clickable="true"
                 android:background="#1277e3"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true" />
@@ -230,6 +248,7 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/imageButtonDone"
                 android:src="@android:drawable/ic_menu_save"
+                android:clickable="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
 

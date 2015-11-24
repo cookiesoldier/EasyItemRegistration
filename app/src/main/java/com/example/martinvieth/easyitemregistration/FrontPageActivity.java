@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +34,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int IMAGE_SELECT = 43;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int ITEMLIST_CHOSEN = 100;
+    final DatabaseDAO dataDAO = new DatabaseDAO();
     private Uri fileUri;
 
     ImageButton btnMenu;
@@ -40,6 +44,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     ImageButton btnSelectGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
+    ImageButton getBtnSearch;
 
     ImageView photoThumb1;
     ImageView photoThumb2;
@@ -55,13 +60,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtGeoArea;
 
 
+    //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
+    int itemNrDeterminer;
+
     //De valgte billeder
     List<Bitmap> acceptedImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
 
         /*
@@ -76,6 +84,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
+
+        btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
+        btnSearch.setOnClickListener(this);
 
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
 
@@ -94,6 +105,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnSelectGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
+
+
+        Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+        edtRecieveDate.setText(tsTemp.toString());
+        edtDatingFrom.setText(tsTemp.toString());
+        edtDatingTo.setText(tsTemp.toString());
+
+
     }
 
     @Override
@@ -136,12 +155,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
         if (v == btnAccept) {
-            final databaseDAO dataDAO = new databaseDAO();
+
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
-                        if (dataDAO.createItem(getDataAndFiles())) {
+                        if (dataDAO.createItem(getDataAndFiles(-1))) {
                             return "succes";
                         } else {
                             return "failed";
@@ -173,36 +192,65 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
             }.execute(100);
         }
+        if (v == btnSearch) {
+            new AsyncTask() {
+                String items;
+
+                @Override
+                protected Object doInBackground(Object... executeParametre) {
+                    try {
+                        //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
+
+                        items = dataDAO.itemList();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return "færdig!";  // <5>
+                }
+
+                @Override
+                protected void onProgressUpdate(Object... progress) {
+
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+
+
+                    Intent ItemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
+                    ItemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+                    startActivityForResult(ItemListActivity, ITEMLIST_CHOSEN);
+                }
+            }.execute(100);
+
+        }
     }
 
-    private void deleteDataAndFiles() {
-        edtItemHeadline.setText("");
-        edtItemHeadline.setText("");
-        edtBeskrivelse.setText("");
-        edtRecieveDate.setText("");
-        edtDatingFrom.setText("");
-        edtDatingTo.setText("");
-        edtRefDonator.setText("");
-        edtTextRefProducer.setText("");
-        edtGeoArea.setText("");
-        acceptedImages.clear();
+    private ArrayList<String> ItemListParse(String items) {
+        //Log.d("Parsing items -->", "Step1" + (items));
+        String[] itemUnparsed;
+        itemUnparsed = items.substring(3).split("detailsuri");
+        //Log.d("Server response ----->", "Step2 " + itemUnparsed.length);
+        ArrayList<String> itemsParsed = new ArrayList<>();
+        for (int i = 1; i < itemUnparsed.length; i++) {
+            String s = itemUnparsed[i];
+            //  Log.d("Server response ----->", "Step2 " + itemUnparsed[i]);
+            s = s.substring(13, s.length() - 4);
+            s = s.replace("\"itemid\":", "");
+            if (s.startsWith(",")) {
+                s = s.substring(1, s.length());
+            }
+            s = s.replace(",\"itemheadline\":\"", " ");
+            s = s.substring(0, s.length() - 1);
+            //Log.d("Server response ----->", "Step3 " + s);
+            itemsParsed.add(s);
 
-    }
 
-    private registreringsDTO getDataAndFiles() {
+        }
+        Log.d("Server response ----->", "Step4 " + itemsParsed);
+        return itemsParsed;
 
 
-        registreringsDTO registrering = new registreringsDTO(edtItemHeadline.getText().toString(),
-                edtBeskrivelse.getText().toString(),
-                edtRecieveDate.getText().toString(),
-                edtDatingFrom.getText().toString(),
-                edtDatingTo.getText().toString(),
-                edtRefDonator.getText().toString(),
-                edtTextRefProducer.getText().toString(),
-                edtGeoArea.getText().toString(),
-                acceptedImages);
-
-        return registrering;
     }
 
 
@@ -239,9 +287,46 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 photoThumb1.setImageBitmap(result.get(0));
                 acceptedImages.addAll(result);
                 break;
+            case ITEMLIST_CHOSEN:
+                String p = data.getExtras().getString("seletedItem");
+                Log.d("Server response ----->", "Step1000 " + p);
+                //okay vi laver en variabel, hvis den er -1 så opretter vi et nyt item, ellers er den det itemNR vi opdaterer.
+                itemNrDeterminer = Integer.parseInt(p.split(" ")[0]);
+                insertDataFromChosenItem(itemNrDeterminer);
+                break;
             default:
-                Log.d("Error", "Der kom et svar i onActivityResult der ikke er taget højde for.");
+                Log.d("Error", "Der kom et svar i onActivityResult der ikke er taget højde for." + requestCode);
         }
+
+    }
+
+    private void insertDataFromChosenItem(final int itemNrDeterminer2) {
+
+        new AsyncTask() {
+            final int itemNr = itemNrDeterminer2;
+
+            @Override
+            protected Object doInBackground(Object... executeParametre) {
+                try {
+                    Log.d("reply database", "svar fra database." + dataDAO.getItem(itemNr));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return "færdig!";
+            }
+
+            @Override
+            protected void onProgressUpdate(Object... progress) {
+
+            }
+
+            @Override
+            protected void onPostExecute(Object result) {
+
+
+            }
+        }.execute(100);
 
     }
 
@@ -290,6 +375,57 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         return mediaFile;
+    }
+
+    private void deleteDataAndFiles() {
+        edtItemHeadline.setText("");
+        edtItemHeadline.setText("");
+        edtBeskrivelse.setText("");
+        edtRecieveDate.setText("");
+        edtDatingFrom.setText("");
+        edtDatingTo.setText("");
+        edtRefDonator.setText("");
+        edtTextRefProducer.setText("");
+        edtGeoArea.setText("");
+        acceptedImages.clear();
+
+        Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+        edtRecieveDate.setText(tsTemp.toString());
+        edtDatingFrom.setText(tsTemp.toString());
+        edtDatingTo.setText(tsTemp.toString());
+
+    }
+
+    private RegistreringsDTO getDataAndFiles(int itemNr) {
+
+        RegistreringsDTO registrering;
+
+        if (itemNr == -1) {
+            registrering = new RegistreringsDTO(edtItemHeadline.getText().toString(),
+                    edtBeskrivelse.getText().toString(),
+                    edtRecieveDate.getText().toString(),
+                    edtDatingFrom.getText().toString(),
+                    edtDatingTo.getText().toString(),
+                    edtRefDonator.getText().toString(),
+                    edtTextRefProducer.getText().toString(),
+                    edtGeoArea.getText().toString(),
+                    acceptedImages);
+        } else {
+            registrering = new RegistreringsDTO(
+                    Integer.toString(itemNr),
+                    edtItemHeadline.getText().toString(),
+                    edtBeskrivelse.getText().toString(),
+                    edtRecieveDate.getText().toString(),
+                    edtDatingFrom.getText().toString(),
+                    edtDatingTo.getText().toString(),
+                    edtRefDonator.getText().toString(),
+                    edtTextRefProducer.getText().toString(),
+                    edtGeoArea.getText().toString(),
+                    acceptedImages);
+        }
+
+
+        return registrering;
     }
 
 }
