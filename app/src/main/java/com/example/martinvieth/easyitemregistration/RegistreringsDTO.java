@@ -15,20 +15,20 @@ public class RegistreringsDTO {
 
 
 
-    String itemNr;
-    String itemHeadline;
-    String beskrivelse;
+  private String itemNr;
+    private String itemHeadline;
+    private String beskrivelse;
     //burde være et timestamp ifølge databasen
-    String recieveDate;
-    String datingFrom;
-    String datingTo;
+    private  String recieveDate;
+    private  String datingFrom;
+    private  String datingTo;
 
-    String refDonator;
-    String refProducer;
+    private  String refDonator;
+    private  String refProducer;
     //er en small int??
-    String geoArea;
+    private String geoArea;
     //bruges ikke endu
-   List<Bitmap> images;
+    private List<Bitmap> images;
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse){
         this.itemHeadline = itemHeadline;

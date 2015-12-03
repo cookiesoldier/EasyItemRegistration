@@ -200,7 +200,7 @@
 
 
     </LinearLayout>
-
+<!-- VI skal kigge på at fjerne toolbars/ gøre dem compatible med tidligere versioner af android.-->
     <Toolbar
         android:layout_width="match_parent"
         android:layout_height="50dp"

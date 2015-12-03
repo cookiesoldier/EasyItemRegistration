@@ -35,13 +35,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
-    final DatabaseDAO dataDAO = new DatabaseDAO();
+    final databaseDAO dataDAO = new databaseDAO();
     private Uri fileUri;
 
     ImageButton btnMenu;
     ImageButton btnSearch;
 
-    ImageButton btnSelectGalleryPhoto;
+    ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
     ImageButton getBtnSearch;
@@ -79,7 +79,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSearch.setImageResource(R.drawable.ic_search);
         */
 
-        btnSelectGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
+        btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
@@ -91,7 +91,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
 
 
-        btnSelectGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
+        btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
@@ -103,7 +103,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
 
-        btnSelectGalleryPhoto.setOnClickListener(this);
+        btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
 
 
@@ -111,6 +111,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
+
 
 
     }
@@ -125,16 +126,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v == btnSelectGalleryPhoto) {
-            /*
-            System.out.println("abc abc abc");
-            startActivity(new Intent(FrontPageActivity.this, ImageGalleryActivity.class));
-            */
 
-            /*
-            Intent selectImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-            startActivityForResult(selectImageIntent, IMAGE_SELECT);
-            */
+        if (v == btnGalleryPhoto) {
+
 
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -143,12 +137,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_SELECT);
         }
         if (v == btnGotoCamera) {
-            /*
-            System.out.println("Der blev trykket på gotocamera");
-            Intent gotocameraIntent = new Intent(this, CameraActivity2.class);
-            System.out.println("Intent til kamera blev oprettet");
-            startActivity(gotocameraIntent);
-            */
+
             Intent captureImageIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
@@ -160,6 +149,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
+
+
                         if (dataDAO.createItem(getDataAndFiles(-1))) {
                             return "succes";
                         } else {
@@ -215,11 +206,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                 @Override
                 protected void onPostExecute(Object result) {
-
-
-                    Intent ItemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
-                    ItemListActivity.putStringArrayListExtra("data", ItemListParse(items));
-                    startActivityForResult(ItemListActivity, ITEMLIST_CHOSEN);
+//hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
+//Den åbner tastatur op når appen åbnes, måske knapt så godt.
+                    Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
+                    itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+                    startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
                 }
             }.execute(100);
 

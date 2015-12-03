@@ -26,16 +26,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ImageGalleryActivity"
-            android:label="@string/title_activity_image_gallery" >
-        </activity>
-        <activity
-            android:name=".CustomPhotoGalleryActivity"
-            android:label="@string/title_activity_custom_photo_gallery" >
-        </activity>
-        <activity android:name=".CameraActivity2" >
-        </activity>
-        <activity
             android:name=".ItemListActivity"
             android:label="@string/title_activity_item_list" >
         </activity>

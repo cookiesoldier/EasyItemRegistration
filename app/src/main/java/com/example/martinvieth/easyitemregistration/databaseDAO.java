@@ -81,7 +81,7 @@ public class databaseDAO {
 
     }
 
-    public boolean createItem(registreringsDTO data) throws IOException {
+    public boolean createItem(RegistreringsDTO data) throws IOException     {
 
         //to add a new item we use the registrerings DTO that holds the data we wish to use.
         //First we are gonna build the message to send to the server.
@@ -124,7 +124,7 @@ public class databaseDAO {
 
     }
 
-    public boolean updateItem(registreringsDTO data)throws IOException {
+    public boolean updateItem(RegistreringsDTO data)throws IOException {
 
 
         //To update a item we simply take the new dublincore data and overwrite the excisting.
@@ -152,7 +152,7 @@ public class databaseDAO {
 
             urlConnection.connect();
             response = urlConnection.getResponseCode();
-            Log.d("Server response ----->", "The response is: " + response);
+            Log.d("Server response ----->", "The response is createItem: " + response);
 
         } finally {
             urlConnection.disconnect();
@@ -208,8 +208,5 @@ public class databaseDAO {
         is.close();
         return sb.toString();
     }
-
-
-
 
 }

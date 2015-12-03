@@ -3,9 +3,6 @@ package com.example.martinvieth.easyitemregistration;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -16,7 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ItemListActivity extends Activity  {
+public class ItemListActivity extends Activity   {
 
 
     ListView itemsListing;
