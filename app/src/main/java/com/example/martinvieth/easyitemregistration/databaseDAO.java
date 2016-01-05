@@ -21,6 +21,8 @@ public class databaseDAO {
 
     String urlString = "http://78.46.187.172:4019";
 
+    String url2 = "";
+
     URL url;
 
 
@@ -34,6 +36,10 @@ public class databaseDAO {
         try {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            //Test til mathias database
+            urlConnection.addRequestProperty("Content-Type","application/json");
+
+            //test slut
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
 
@@ -58,6 +64,8 @@ public class databaseDAO {
 
         url = new URL(urlString + "/items/" + Integer.toString(itemNr));
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+
 
         try {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
@@ -208,5 +216,13 @@ public class databaseDAO {
         is.close();
         return sb.toString();
     }
+
+
+
+
+
+
+
+
 
 }
