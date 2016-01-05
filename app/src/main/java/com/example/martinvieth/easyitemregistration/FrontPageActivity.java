@@ -39,7 +39,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int ITEMLIST_CHOSEN = 100;
     final databaseDAO dataDAO = new databaseDAO();
     private Uri fileUri;
-    
+
     ImageButton btnMenu;
     ImageButton btnSearch;
 
