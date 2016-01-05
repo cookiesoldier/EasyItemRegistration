@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.media.MediaRecorder;
+import android.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,10 +39,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int ITEMLIST_CHOSEN = 100;
     final databaseDAO dataDAO = new databaseDAO();
     private Uri fileUri;
-
+    
     ImageButton btnMenu;
     ImageButton btnSearch;
 
+    ImageButton btnRecorder;
     ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
@@ -123,8 +126,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-
-    @Override
+        @Override
     public void onClick(View v) {
 
         if (v == btnGalleryPhoto) {
@@ -183,7 +185,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
             }.execute(100);
         }
+
+        //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
+        //Den åbner tastatur op når appen åbnes, måske knapt så godt.
+
         if (v == btnSearch) {
+
             new AsyncTask() {
                 String items;
 
@@ -206,8 +213,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                 @Override
                 protected void onPostExecute(Object result) {
-//hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
-//Den åbner tastatur op når appen åbnes, måske knapt så godt.
+
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
                     itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
                     startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
@@ -216,6 +222,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         }
     }
+
+
 
     private ArrayList<String> ItemListParse(String items) {
         //Log.d("Parsing items -->", "Step1" + (items));

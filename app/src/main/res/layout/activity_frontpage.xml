@@ -220,7 +220,8 @@
                 android:id="@+id/photoThumb"
                 android:layout_marginLeft="35dp"
                 android:theme="@style/myImageView"
-                android:layout_alignLeft="@+id/imageButtonCamerafolder" />
+                android:layout_alignParentTop="true"
+                android:layout_alignEnd="@+id/imageButtonCamera" />
 
 
             <ImageButton
@@ -239,8 +240,9 @@
                 android:src="@mipmap/cameraicon"
                 android:clickable="true"
                 android:background="#1277e3"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginEnd="82dp"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/imageButtonDone" />
 
 
             <ImageButton
@@ -254,6 +256,16 @@
 
                 android:background="#1277e3" />
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageButtonRecorder"
+                android:src="@mipmap/microphoneicon"
+                android:clickable="true"
+                android:background="#1277e3"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/imageButtonCamera"
+                android:layout_marginEnd="53dp" />
 
 
         </RelativeLayout>
