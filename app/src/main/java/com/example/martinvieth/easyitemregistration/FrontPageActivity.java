@@ -1,11 +1,12 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.AudioRecord;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,11 +27,14 @@ import android.media.MediaPlayer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FrontPageActivity extends Activity implements View.OnClickListener {
 
@@ -38,7 +43,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
-    public static final int AUDIO_RECORDING = 44;
     final databaseDAO dataDAO = new databaseDAO();
     private Uri fileUri;
 
@@ -69,7 +73,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     int itemNrDeterminer;
 
     //De valgte billeder
-    List<Bitmap> acceptedImages = new ArrayList<>();
+    List<Uri> selectedImages = new ArrayList<>();
+    //De viste billeder
+    List<Bitmap> shownImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +99,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
         btnSearch.setOnClickListener(this);
 
-        btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
-        btnRecorder.setOnClickListener(this);
-
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
-
+        photoThumb2 = (ImageView) findViewById(R.id.photoThumb2);
+        photoThumb3 = (ImageView) findViewById(R.id.photoThumb3);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
@@ -113,12 +117,18 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
+        edtRecieveDate.setOnClickListener(this);
+        edtDatingFrom.setOnClickListener(this);
+        edtDatingTo.setOnClickListener(this);
+
 
 
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
+
+
     }
 
     @Override
@@ -128,17 +138,45 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-    @Override
-    public void onClick(View v) {
+    Calendar myCalendar = Calendar.getInstance();
 
-        if (v == btnRecorder) {
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
-            Intent audio = new Intent(FrontPageActivity.this, AudioRecorder.class);
-            startActivityForResult(audio, AUDIO_RECORDING);
-
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
         }
 
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
+
+
+        edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+        edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+        edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+    }
+
+        @Override
+    public void onClick(View v) {
+
+        if (v == edtDatingFrom || v == edtRecieveDate || v == edtDatingTo) {
+            new DatePickerDialog(FrontPageActivity.this, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        }
+
+
         if (v == btnGalleryPhoto) {
+
 
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -195,6 +233,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
+        //Den åbner tastatur op når appen åbnes, måske knapt så godt.
 
         if (v == btnSearch) {
 
@@ -266,32 +305,30 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         List<Bitmap> result = new ArrayList<>();
         switch (requestCode) {
             case IMAGE_CAPTURE:
-                //Bitmap img = (Bitmap) data.getExtras().get("data");
-                try {
-                    result.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri));
-                } catch (IOException e) {
-                    Log.d("Error", "Could not find image file in storage.");
-                }
-                photoThumb1.setImageBitmap(result.get(0));
+                selectedImages.add(fileUri);
+                shownImages.clear();
+                bitMapAdd();
                 break;
 
             case IMAGE_SELECT:
-                AssetFileDescriptor fileDS = null;
-                try {
-                    fileDS = getContentResolver().openAssetFileDescriptor(data.getData(), "r");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (fileDS != null) {
-                    try {
-
-                        result.add(BitmapFactory.decodeStream(fileDS.createInputStream()));
-                    } catch (IOException e) {
-                        Log.d("Error", "Could not load selected image(s)");
+                String abc = data.toString();
+                Log.d("Pre multi img check-->", abc);
+                if (data.getClipData() != null) {
+                    ClipData clip = data.getClipData();
+                    for (int i = 0; i < clip.getItemCount(); i++) {
+                        ClipData.Item item = clip.getItemAt(i);
+                        Uri uri = item.getUri();
+                        //Indsæt uri i liste
+                        Log.d("URI check ----->", uri.toString());
+                        selectedImages.add(uri);
                     }
+                } else {
+                    Log.d("URI check -----> ", data.getData().toString());
+                    selectedImages.add(data.getData());
+                    //shownImages.addAll(result);
                 }
-                photoThumb1.setImageBitmap(result.get(0));
-                acceptedImages.addAll(result);
+                shownImages.clear();
+                bitMapAdd();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -393,7 +430,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRefDonator.setText("");
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
-        acceptedImages.clear();
+        shownImages.clear();
 
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
         edtRecieveDate.setText(tsTemp.toString());
@@ -415,7 +452,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    acceptedImages);
+                    shownImages);
         } else {
             registrering = new RegistreringsDTO(
                     Integer.toString(itemNr),
@@ -427,11 +464,63 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    acceptedImages);
+                    shownImages);
         }
 
 
         return registrering;
     }
 
+    /**
+     * Denne metode lægger de 3 først billeder URI's fra selectedimages ind i showimages som bitmaps
+     *
+     */
+    public void bitMapAdd() {
+        AssetFileDescriptor fileDS = null;
+        int runs = 3;
+        if (selectedImages.size() < 3) {
+            runs = selectedImages.size();
+        }
+        Log.d("Nr of runs:  ", Integer.toString(runs));
+        for (int x = 0; x < runs; x++) {
+            try {
+                /*
+                tjek bitmaps størrelse, derefter downsize den til noget vi er sikre på at arbejde med.
+                InputStream input = cr.openInputStream(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(input);
+                input.close();
+                */
+                Log.d("Pree add selected", selectedImages.get(0).toString());
+                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size()-1-x)));
+
+            } catch (IOException e) {
+                Log.d("Error", "Could not find image file in storage.");
+                e.printStackTrace();
+            }
+
+
+        }
+        Log.d("size of runs", Integer.toString(runs));
+        updatePhotoThump();
+    }
+
+    /**
+     * Denne metode tager billederne fra shownimages og lægger dem ind i de 3 photothump
+     */
+    public void updatePhotoThump() {
+        Log.d("updateThump images: ", Integer.toString(shownImages.size()));
+
+            if(shownImages.size() == 1) {
+                photoThumb1.setImageBitmap(shownImages.get(0));
+            }else if(shownImages.size() == 2){
+                photoThumb1.setImageBitmap(shownImages.get(0));
+                photoThumb2.setImageBitmap(shownImages.get(1));
+            }else if(shownImages.size() >= 3){
+                photoThumb1.setImageBitmap(shownImages.get(0));
+                photoThumb2.setImageBitmap(shownImages.get(1));
+                photoThumb3.setImageBitmap(shownImages.get(2));
+            }
+
+
+    }
 }
