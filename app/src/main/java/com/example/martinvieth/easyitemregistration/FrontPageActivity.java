@@ -122,11 +122,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
+        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
+            }
+        });
 
 
     }

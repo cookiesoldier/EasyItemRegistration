@@ -14,6 +14,7 @@ import android.content.Context;
 import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -38,10 +39,12 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 
         if (v == btnStartRecord){
+            Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
         }
 
         if (v == btnStopRecord){
+            Toast.makeText(getApplicationContext(), "Recording was successful", Toast.LENGTH_LONG).show();
             stopRecording();
         }
 
@@ -51,6 +54,10 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         if (v == btnStop){
             stopPlaying();
+        }
+
+        if (v == btnSave){
+
         }
     }
 
@@ -64,12 +71,15 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         btnStopRecord = (Button) findViewById(R.id.btnStopRecord);
         btnStopRecord.setOnClickListener(this);
-        
+
         btnPlay = (Button) findViewById(R.id.btnPlay);
         btnPlay.setOnClickListener(this);
 
         btnStop = (Button) findViewById(R.id.btnStop);
         btnStop.setOnClickListener(this);
+
+        btnSave = (Button) findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(this);
 
     }
 
