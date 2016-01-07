@@ -1,5 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -43,19 +45,20 @@
 
 
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#1277e3"
-            android:orientation="horizontal">
-
+            
             <ImageButton
                 android:id="@+id/imageButtonSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:src="@drawable/ic_search"
                 android:layout_centerVertical="true"
                 android:background="#1277e3"
                 android:clickable="true"
-                android:src="@drawable/ic_search" />
+                />
 
         </LinearLayout>
 
@@ -71,8 +74,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:weightSum="1">
+                android:id="@+id/scrollView"
+                android:layout_marginBottom="48dp"
+                android:fillViewport="false">
+                <!-- android:layout_below="@+id/toolbarView" -->
 
                 <TextView
                     android:id="@+id/textView"
@@ -149,6 +154,14 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="0.05" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Datering til"
+                        android:id="@+id/textView4"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="0.05" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -234,8 +247,11 @@
                 android:id="@+id/imageButtonCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+                android:src="@mipmap/cameraicon"
+                android:clickable="true"
+                android:background="#1277e3"
+                android:layout_alignParentTop="true"
+             
 
                 android:background="#1277e3"
                 android:clickable="true"
@@ -284,6 +300,16 @@
                 android:clickable="true"
                 android:src="@android:drawable/ic_menu_save" />
 
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageButtonRecorder"
+                android:src="@mipmap/microphoneicon"
+                android:clickable="true"
+                android:background="#1277e3"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/imageButtonCamera"
+                android:layout_marginEnd="53dp" />
 
         </LinearLayout>
 
