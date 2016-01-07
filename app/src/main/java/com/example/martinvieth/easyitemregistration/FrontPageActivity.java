@@ -449,7 +449,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 input.close();
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
-                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(x)));
+                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size()-1-x)));
 
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");

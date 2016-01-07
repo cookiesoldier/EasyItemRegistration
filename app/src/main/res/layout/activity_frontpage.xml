@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -223,9 +225,18 @@
                 android:src="@drawable/ic_camerafolder" />
 
             <LinearLayout
-                android:layout_height="match_parent"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/imageButtonRecorder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="#1277e3"
+                    android:clickable="true"
+                    android:src="@mipmap/microphoneicon"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -249,24 +260,24 @@
                 <ImageView
                     android:id="@+id/photoThumb"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="fill_parent"
+                    android:layout_weight="1"
                     android:theme="@style/myImageView" />
 
                 <ImageView
                     android:id="@+id/photoThumb2"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="fill_parent"
                     android:layout_toEndOf="@id/photoThumb2"
+                    android:layout_weight="1"
                     android:theme="@style/myImageView" />
 
                 <ImageView
                     android:id="@+id/photoThumb3"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="fill_parent"
                     android:layout_toEndOf="@id/photoThumb3"
+                    android:layout_weight="1"
                     android:theme="@style/myImageView" />
 
             </LinearLayout>
