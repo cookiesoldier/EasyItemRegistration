@@ -1,6 +1,7 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,8 +31,10 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FrontPageActivity extends Activity implements View.OnClickListener {
 
@@ -113,6 +117,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
+        edtDatingFrom.setOnClickListener(this);
 
 
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
@@ -130,8 +135,39 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
+    Calendar myCalendar = Calendar.getInstance();
+
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
+
+        edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+    }
+
         @Override
     public void onClick(View v) {
+
+        if (v == edtDatingFrom) {
+            new DatePickerDialog(FrontPageActivity.this, date, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        }
+
 
         if (v == btnGalleryPhoto) {
 
