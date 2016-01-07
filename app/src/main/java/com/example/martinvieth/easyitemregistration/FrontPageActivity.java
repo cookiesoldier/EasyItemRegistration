@@ -117,7 +117,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
+        edtRecieveDate.setOnClickListener(this);
         edtDatingFrom.setOnClickListener(this);
+        edtDatingTo.setOnClickListener(this);
+
 
 
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
@@ -156,13 +159,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
+
+        edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
         edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+        edtDatingTo.setText(sdf.format(myCalendar.getTime()));
     }
 
         @Override
     public void onClick(View v) {
 
-        if (v == edtDatingFrom) {
+        if (v == edtDatingFrom || v == edtRecieveDate || v == edtDatingTo) {
             new DatePickerDialog(FrontPageActivity.this, date, myCalendar
                     .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                     myCalendar.get(Calendar.DAY_OF_MONTH)).show();
