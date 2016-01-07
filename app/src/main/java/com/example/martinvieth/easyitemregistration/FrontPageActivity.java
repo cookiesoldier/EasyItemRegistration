@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioRecord;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
+    public static final int AUDIO_RECORDING = 44;
     final databaseDAO dataDAO = new databaseDAO();
     private Uri fileUri;
 
@@ -117,14 +119,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
-        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
-            }
-        });
-
-
     }
 
     @Override
@@ -137,15 +131,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        if ( v == btnRecorder) {
+        if (v == btnRecorder) {
 
-            //TODO
+            Intent audio = new Intent(FrontPageActivity.this, AudioRecorder.class);
+            startActivityForResult(audio, AUDIO_RECORDING);
 
         }
 
-
         if (v == btnGalleryPhoto) {
-
 
             Intent intent = new Intent();
             intent.setType("image/*");

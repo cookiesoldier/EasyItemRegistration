@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -12,27 +14,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
 
         <Button
-            android:layout_width="300px"
-            android:layout_height="90px"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
             android:text="Start recording"
             android:id="@+id/btnStartRecord"
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="300px"
-            android:layout_height="90px"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
             android:text="Stop recording"
             android:id="@+id/btnStopRecord"
             android:layout_gravity="center_horizontal" />
 
         <Button
-            android:layout_width="300px"
-            android:layout_height="90px"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/btnSaveRecord"
             android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            android:id="@+id/btnPlay"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:id="@+id/btnStop"
+            android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 </RelativeLayout>

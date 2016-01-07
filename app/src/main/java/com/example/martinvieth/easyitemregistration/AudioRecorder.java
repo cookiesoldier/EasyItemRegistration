@@ -22,6 +22,8 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnStartRecord;
     Button btnStopRecord;
     Button btnSave;
+    Button btnPlay;
+    Button btnStop;
 
     @Override
     public void onClick(View v) {
@@ -33,26 +35,20 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         if (v == btnStopRecord){
             stopRecording();
         }
+
+        if (v == btnPlay){
+            startPlaying();
+        }
+
+        if (v == btnStop){
+            stopPlaying();
+        }
     }
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
-        LinearLayout ll = new LinearLayout(this);
-        mRecordButton = new RecordButton(this);
-        ll.addView(mRecordButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mPlayButton = new PlayButton(this);
-        ll.addView(mPlayButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        setContentView(ll);
+        setContentView(R.layout.activity_audio_recorder);
 
         btnStartRecord = (Button) findViewById(R.id.btnStartRecord);
         btnStartRecord.setOnClickListener(this);
@@ -63,30 +59,19 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         btnSave = (Button) findViewById(R.id.btnSaveRecord);
         btnSave.setOnClickListener(this);
 
+        btnPlay = (Button) findViewById(R.id.btnPlay);
+        btnPlay.setOnClickListener(this);
+
+        btnStop = (Button) findViewById(R.id.btnStop);
+        btnStop.setOnClickListener(this);
+
     }
 
         static final String LOG_TAG = "AudioRecordTest";
         static String mFileName = null;
-        RecordButton mRecordButton = null;
         MediaRecorder mRecorder = null;
-        PlayButton   mPlayButton = null;
         MediaPlayer   mPlayer = null;
 
-    private void onRecord(boolean start) {
-        if (start) {
-            startRecording();
-        } else {
-            stopRecording();
-        }
-    }
-
-    private void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
-        }
-    }
 
     private void startPlaying() {
         mPlayer = new MediaPlayer();
@@ -124,50 +109,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
-    }
-
-    class RecordButton extends Button {
-        boolean mStartRecording = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    setText("Stop recording");
-                } else {
-                    setText("Start recording");
-                }
-                mStartRecording = !mStartRecording;
-            }
-        };
-
-        public RecordButton(Context ctx) {
-            super(ctx);
-            setText("Start recording");
-            setOnClickListener(clicker);
-        }
-    }
-
-    class PlayButton extends Button {
-        boolean mStartPlaying = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onPlay(mStartPlaying);
-                if (mStartPlaying) {
-                    setText("Stop playing");
-                } else {
-                    setText("Start playing");
-                }
-                mStartPlaying = !mStartPlaying;
-            }
-        };
-
-        public PlayButton(Context ctx) {
-            super(ctx);
-            setText("Start playing");
-            setOnClickListener(clicker);
-        }
     }
 
     @Override
