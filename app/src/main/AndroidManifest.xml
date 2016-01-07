@@ -6,8 +6,8 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,6 +29,8 @@
         <activity
             android:name=".ItemListActivity"
             android:label="@string/title_activity_item_list" >
+        </activity>
+        <activity android:name=".AudioRecorder" >
         </activity>
     </application>
 

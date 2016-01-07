@@ -91,6 +91,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
         btnSearch.setOnClickListener(this);
 
+        btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
+        btnRecorder.setOnClickListener(this);
+
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
 
 
@@ -114,7 +117,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
-
+        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
+            }
+        });
 
 
     }
@@ -126,8 +134,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
+
+        if ( v == btnRecorder) {
+
+            //TODO
+
+        }
+
 
         if (v == btnGalleryPhoto) {
 
@@ -187,7 +202,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
-        //Den åbner tastatur op når appen åbnes, måske knapt så godt.
 
         if (v == btnSearch) {
 
