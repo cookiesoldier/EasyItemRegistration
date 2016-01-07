@@ -1,10 +1,9 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <!--
     <Toolbar
@@ -36,228 +35,257 @@
     -->
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:orientation="vertical">
         <!-- android:layout_below="@id/toolbarView" -->
 
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#1277e3" >
+            android:background="#1277e3"
+            android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/imageButtonSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:id="@+id/imageButtonSearch"
-                android:src="@drawable/ic_search"
                 android:layout_centerVertical="true"
+                android:background="#1277e3"
                 android:clickable="true"
-                android:background="#1277e3" />
+                android:src="@drawable/ic_search" />
 
         </LinearLayout>
 
         <ScrollView
-                android:layout_width="fill_parent"
+            android:id="@+id/scrollView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:fillViewport="false">
+            <!-- android:layout_below="@+id/toolbarView" -->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/scrollView"
-                android:layout_marginBottom="48dp"
-                android:fillViewport="false">
-                <!-- android:layout_below="@+id/toolbarView" -->
+                android:orientation="vertical"
+                android:weightSum="1">
 
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Overskrift"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <EditText
+                    android:id="@+id/EditTextItemHeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:weightSum="1">
+                    android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/textView"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Overskrift" />
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Beskrivelse"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/EditTextItemHeadline"
-                        android:layout_gravity="center_horizontal" />
+                <EditText
+                    android:id="@+id/editTextBeskrivelse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Beskrivelse"
-                        android:id="@+id/textView1"
-                        android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05"
+                    android:text="ModtagelsesDato"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextBeskrivelse"
-                        android:layout_gravity="center_horizontal" />
+                <EditText
+                    android:id="@+id/EditTextRecieveDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="ModtagelsesDato"
-                        android:id="@+id/textView2"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.05" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05"
+                    android:text="Datering fra"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/EditTextRecieveDate"
-                        android:layout_gravity="center_horizontal" />
+                <EditText
+                    android:id="@+id/editTextDatingFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.06" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Datering fra"
-                        android:id="@+id/textView3"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.05" />
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05"
+                    android:text="Datering til"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextDatingFrom"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.06" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Datering til"
-                        android:id="@+id/textView4"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.05" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextDatingTo"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.05" />
+                <EditText
+                    android:id="@+id/editTextDatingTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="0.05" />
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Ref. til Donator"
-                        android:id="@+id/textView6"
-                        android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Ref. til Donator"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextRef.Donator"
-                        android:layout_gravity="center_horizontal" />
+                <EditText
+                    android:id="@+id/editTextRef.Donator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Ref. til producent"
-                        android:id="@+id/textView7"
-                        android:layout_gravity="center_horizontal" />
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Ref. til producent"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextRef.Producer"
-                        android:layout_gravity="center_horizontal"/>
+                <EditText
+                    android:id="@+id/editTextRef.Producer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Geografisk område"
-                        android:id="@+id/textView8"
-                        android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Geografisk område"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/editTextGeoArea"
-                        android:layout_gravity="center_horizontal"/>
+                <EditText
+                    android:id="@+id/editTextGeoArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
 
 
-                </LinearLayout>
+            </LinearLayout>
 
         </ScrollView>
 
 
     </LinearLayout>
-<!-- VI skal kigge på at fjerne toolbars/ gøre dem compatible med tidligere versioner af android.-->
+    <!-- VI skal kigge på at fjerne toolbars/ gøre dem compatible med tidligere versioner af android.-->
     <Toolbar
+        android:id="@+id/toolbarViewBottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:id="@+id/toolbarViewBottom"
-        android:background="#1277e3"
-        android:layout_alignParentBottom="true">
+        android:background="#1277e3">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/photoThumb"
-                android:layout_marginLeft="35dp"
-                android:theme="@style/myImageView"
-                android:layout_alignLeft="@+id/imageButtonCamerafolder" />
-
-
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
                 android:id="@+id/imageButtonCamerafolder"
-                android:src="@drawable/ic_camerafolder"
-                android:clickable="true"
-                android:layout_centerVertical="true"
-                android:background="#1277e3" />
-
-            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:id="@+id/imageButtonCamera"
-                android:src="@mipmap/cameraicon"
-                android:clickable="true"
                 android:background="#1277e3"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:clickable="true"
+                android:src="@drawable/ic_camerafolder" />
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+            </LinearLayout>
 
 
             <ImageButton
+                android:id="@+id/imageButtonCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:id="@+id/imageButtonDone"
-                android:src="@android:drawable/ic_menu_save"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+
+                android:background="#1277e3"
                 android:clickable="true"
+                android:src="@mipmap/cameraicon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/photoThumb"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:theme="@style/myImageView" />
+
+                <ImageView
+                    android:id="@+id/photoThumb2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:layout_toEndOf="@id/photoThumb2"
+                    android:theme="@style/myImageView" />
+
+                <ImageView
+                    android:id="@+id/photoThumb3"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:layout_toEndOf="@id/photoThumb3"
+                    android:theme="@style/myImageView" />
+
+            </LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/imageButtonDone"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_gravity="right"
 
-                android:background="#1277e3" />
+                android:background="#1277e3"
+                android:clickable="true"
+                android:src="@android:drawable/ic_menu_save" />
 
 
-
-        </RelativeLayout>
-
+        </LinearLayout>
 
     </Toolbar>
 

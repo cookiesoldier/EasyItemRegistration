@@ -1,6 +1,7 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +66,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     int itemNrDeterminer;
 
     //De valgte billeder
-    List<Bitmap> acceptedImages = new ArrayList<>();
+    List<Uri> selectedImages = new ArrayList<>();
+    //De viste billeder
+    List<Bitmap> shownImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSearch.setOnClickListener(this);
 
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
-
+        photoThumb2 = (ImageView) findViewById(R.id.photoThumb2);
+        photoThumb3 = (ImageView) findViewById(R.id.photoThumb3);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
@@ -111,7 +116,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
-
 
 
     }
@@ -251,32 +255,30 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         List<Bitmap> result = new ArrayList<>();
         switch (requestCode) {
             case IMAGE_CAPTURE:
-                //Bitmap img = (Bitmap) data.getExtras().get("data");
-                try {
-                    result.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), fileUri));
-                } catch (IOException e) {
-                    Log.d("Error", "Could not find image file in storage.");
-                }
-                photoThumb1.setImageBitmap(result.get(0));
+                selectedImages.add(fileUri);
+                shownImages.clear();
+                bitMapAdd();
                 break;
 
             case IMAGE_SELECT:
-                AssetFileDescriptor fileDS = null;
-                try {
-                    fileDS = getContentResolver().openAssetFileDescriptor(data.getData(), "r");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if (fileDS != null) {
-                    try {
-
-                        result.add(BitmapFactory.decodeStream(fileDS.createInputStream()));
-                    } catch (IOException e) {
-                        Log.d("Error", "Could not load selected image(s)");
+                String abc = data.toString();
+                Log.d("Pre multi img check-->", abc);
+                if (data.getClipData() != null) {
+                    ClipData clip = data.getClipData();
+                    for (int i = 0; i < clip.getItemCount(); i++) {
+                        ClipData.Item item = clip.getItemAt(i);
+                        Uri uri = item.getUri();
+                        //Indsæt uri i liste
+                        Log.d("URI check ----->", uri.toString());
+                        selectedImages.add(uri);
                     }
+                } else {
+                    Log.d("URI check -----> ", data.getData().toString());
+                    selectedImages.add(data.getData());
+                    //shownImages.addAll(result);
                 }
-                photoThumb1.setImageBitmap(result.get(0));
-                acceptedImages.addAll(result);
+                shownImages.clear();
+                bitMapAdd();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -378,7 +380,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRefDonator.setText("");
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
-        acceptedImages.clear();
+        shownImages.clear();
 
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
         edtRecieveDate.setText(tsTemp.toString());
@@ -400,7 +402,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    acceptedImages);
+                    shownImages);
         } else {
             registrering = new RegistreringsDTO(
                     Integer.toString(itemNr),
@@ -412,11 +414,63 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    acceptedImages);
+                    shownImages);
         }
 
 
         return registrering;
     }
 
+    /**
+     * Denne metode lægger de 3 først billeder URI's fra selectedimages ind i showimages som bitmaps
+     *
+     */
+    public void bitMapAdd() {
+        AssetFileDescriptor fileDS = null;
+        int runs = 3;
+        if (selectedImages.size() < 3) {
+            runs = selectedImages.size();
+        }
+        Log.d("Nr of runs:  ", Integer.toString(runs));
+        for (int x = 0; x < runs; x++) {
+            try {
+                /*
+                tjek bitmaps størrelse, derefter downsize den til noget vi er sikre på at arbejde med.
+                InputStream input = cr.openInputStream(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(input);
+                input.close();
+                */
+                Log.d("Pree add selected", selectedImages.get(0).toString());
+                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(x)));
+
+            } catch (IOException e) {
+                Log.d("Error", "Could not find image file in storage.");
+                e.printStackTrace();
+            }
+
+
+        }
+        Log.d("size of runs", Integer.toString(runs));
+        updatePhotoThump();
+    }
+
+    /**
+     * Denne metode tager billederne fra shownimages og lægger dem ind i de 3 photothump
+     */
+    public void updatePhotoThump() {
+        Log.d("updateThump images: ", Integer.toString(shownImages.size()));
+
+            if(shownImages.size() == 1) {
+                photoThumb1.setImageBitmap(shownImages.get(0));
+            }else if(shownImages.size() == 2){
+                photoThumb1.setImageBitmap(shownImages.get(0));
+                photoThumb2.setImageBitmap(shownImages.get(1));
+            }else if(shownImages.size() >= 3){
+                photoThumb1.setImageBitmap(shownImages.get(0));
+                photoThumb2.setImageBitmap(shownImages.get(1));
+                photoThumb3.setImageBitmap(shownImages.get(2));
+            }
+
+
+    }
 }
