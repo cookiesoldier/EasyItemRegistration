@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,10 +24,15 @@ import android.widget.Toast;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -130,7 +137,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
 
         if (v == btnGalleryPhoto) {
@@ -219,7 +226,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 protected void onPostExecute(Object result) {
 
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
-                    itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+                    try {
+                        itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
                 }
             }.execute(100);
@@ -228,39 +239,31 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
+    private ArrayList<String> ItemListParse(String items) throws JSONException {
 
-    private ArrayList<String> ItemListParse(String items) {
-        //Log.d("Parsing items -->", "Step1" + (items));
-        String[] itemUnparsed;
-        itemUnparsed = items.substring(3).split("detailsuri");
-        //Log.d("Server response ----->", "Step2 " + itemUnparsed.length);
+        Log.d("Parsing items -->", "Step1" + (items));
+        //Vi prøver at gøre det med json objekter istedet.
+        //først lægger vi string ind i et json object
+        JSONArray jsonArrayData = new JSONArray(items);
+
         ArrayList<String> itemsParsed = new ArrayList<>();
-        for (int i = 1; i < itemUnparsed.length; i++) {
-            String s = itemUnparsed[i];
-            //  Log.d("Server response ----->", "Step2 " + itemUnparsed[i]);
-            s = s.substring(13, s.length() - 4);
-            s = s.replace("\"itemid\":", "");
-            if (s.startsWith(",")) {
-                s = s.substring(1, s.length());
-            }
-            s = s.replace(",\"itemheadline\":\"", " ");
-            s = s.substring(0, s.length() - 1);
-            //Log.d("Server response ----->", "Step3 " + s);
-            itemsParsed.add(s);
-
-
+        for (int i = 0; i < jsonArrayData.length(); i++) {
+            JSONObject dataPoint = jsonArrayData.getJSONObject(i);
+            itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline"));
+            // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
+            Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
-        Log.d("Server response ----->", "Step4 " + itemsParsed);
+
+
         return itemsParsed;
 
 
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
-        List<Bitmap> result = new ArrayList<>();
+
         switch (requestCode) {
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri);
@@ -283,15 +286,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 } else {
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData());
-                    //shownImages.addAll(result);
                 }
                 shownImages.clear();
                 bitMapAdd();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
-                Log.d("Server response ----->", "Step1000 " + p);
+                Log.d("Choosen item  ----->", p);
                 //okay vi laver en variabel, hvis den er -1 så opretter vi et nyt item, ellers er den det itemNR vi opdaterer.
+
                 itemNrDeterminer = Integer.parseInt(p.split(" ")[0]);
                 insertDataFromChosenItem(itemNrDeterminer);
                 break;
@@ -301,15 +304,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     }
 
-    private void insertDataFromChosenItem(final int itemNrDeterminer2) {
+    private void insertDataFromChosenItem(final int itemNrDeter) {
 
         new AsyncTask() {
-            final int itemNr = itemNrDeterminer2;
+
+            final int itemNr = itemNrDeter;
+            String itemData;
 
             @Override
             protected Object doInBackground(Object... executeParametre) {
                 try {
-                    Log.d("reply database", "svar fra database." + dataDAO.getItem(itemNr));
+                    itemData = dataDAO.getItem(itemNr);
+                    Log.d("reply database", "svar fra database." + itemData);
+
+                    //Så skal vi sætte data ind i vores registreringsDTO som opbevarer den data vi arbejder med nu.
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -324,8 +333,24 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
             @Override
             protected void onPostExecute(Object result) {
+                deleteDataAndFiles();
+                JSONObject jsonData = new JSONObject();
+                try {
+                    jsonData = new JSONObject(itemData);
 
-
+                    itemNrDeterminer = itemNr;
+                    edtItemHeadline.setText(jsonData.get("itemheadline").toString());
+                    edtBeskrivelse.setText(jsonData.get("itemdescription").toString());
+                    edtRecieveDate.setText(jsonData.get("itemreceived").toString());
+                    edtDatingFrom.setText(jsonData.get("itemdatingfrom").toString());
+                    edtDatingTo.setText(jsonData.get("itemdatingto").toString());
+                    edtRefDonator.setText(jsonData.get("donator").toString());
+                    edtTextRefProducer.setText(jsonData.get("producer").toString());
+                    edtGeoArea.setText(jsonData.get("postnummer").toString());
+                    shownImages.clear();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }.execute(100);
 
@@ -431,7 +456,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     /**
      * Denne metode lægger de 3 først billeder URI's fra selectedimages ind i showimages som bitmaps
-     *
      */
     public void bitMapAdd() {
         AssetFileDescriptor fileDS = null;
@@ -449,7 +473,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 input.close();
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
-                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size()-1-x)));
+                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
 
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
@@ -468,17 +492,19 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public void updatePhotoThump() {
         Log.d("updateThump images: ", Integer.toString(shownImages.size()));
 
-            if(shownImages.size() == 1) {
-                photoThumb1.setImageBitmap(shownImages.get(0));
-            }else if(shownImages.size() == 2){
-                photoThumb1.setImageBitmap(shownImages.get(0));
-                photoThumb2.setImageBitmap(shownImages.get(1));
-            }else if(shownImages.size() >= 3){
-                photoThumb1.setImageBitmap(shownImages.get(0));
-                photoThumb2.setImageBitmap(shownImages.get(1));
-                photoThumb3.setImageBitmap(shownImages.get(2));
-            }
+        if (shownImages.size() == 1) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+        } else if (shownImages.size() == 2) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+            photoThumb2.setImageBitmap(shownImages.get(1));
+        } else if (shownImages.size() >= 3) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+            photoThumb2.setImageBitmap(shownImages.get(1));
+            photoThumb3.setImageBitmap(shownImages.get(2));
+        }
 
 
     }
+
+
 }
