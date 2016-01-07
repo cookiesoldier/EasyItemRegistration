@@ -16,9 +16,7 @@ import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 public class AudioRecorder extends Activity implements View.OnClickListener {
 
@@ -28,12 +26,9 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnPlay;
     Button btnStop;
 
-    //Environment.getExternalStorageDirectory()+"recorder.3gpp";
-    //Environment.getExternalStorageDirectory().getAbsolutePath()
-    //Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-
     final String LOG_TAG = "AudioRecordTest";
     String mFileName = null;
+    String uniqueName = String.valueOf(System.currentTimeMillis());
     MediaRecorder mRecorder = null;
     MediaPlayer   mPlayer = null;
 
@@ -69,10 +64,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         btnStopRecord = (Button) findViewById(R.id.btnStopRecord);
         btnStopRecord.setOnClickListener(this);
-
-        btnSave = (Button) findViewById(R.id.btnSaveRecord);
-        btnSave.setOnClickListener(this);
-
+        
         btnPlay = (Button) findViewById(R.id.btnPlay);
         btnPlay.setOnClickListener(this);
 
@@ -83,7 +75,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
     public AudioRecorder() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audio.3gp";
+        mFileName += "/audio"+uniqueName+".3gp";
     }
 
     private void startPlaying() {
