@@ -115,6 +115,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
 
+        edtRecieveDate.setFocusable(false);
+        edtDatingFrom.setFocusable(false);
+        edtDatingTo.setFocusable(false);
+
         btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
         edtRecieveDate.setOnClickListener(this);
@@ -122,10 +126,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-        Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-        edtRecieveDate.setText(tsTemp.toString());
-        edtDatingFrom.setText(tsTemp.toString());
-        edtDatingTo.setText(tsTemp.toString());
+        //Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
+        //edtRecieveDate.setText(tsTemp.toString());
+        //edtDatingFrom.setText(tsTemp.toString());
+        //edtDatingTo.setText(tsTemp.toString());
         findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
