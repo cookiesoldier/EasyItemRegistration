@@ -178,6 +178,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             getSetDate(2);
 
         }
+
             if (v == edtRecieveDate) {
                 getSetDate(1);
 

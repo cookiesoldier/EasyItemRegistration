@@ -2,6 +2,7 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Window;
 import android.widget.ImageView;
 import android.os.Environment;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 import android.widget.Toast;
+import android.net.Uri;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -31,7 +34,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     String uniqueName = String.valueOf(System.currentTimeMillis());
     MediaRecorder mRecorder = null;
     MediaPlayer   mPlayer = null;
-
+    private Uri fileUri;
 
 
     @Override
@@ -60,7 +63,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
 
         if (v == btnSave){
-
+            fileUri = getOutputMediaFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
         }
 
         if (v == btnPause){
@@ -68,6 +71,28 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
             imgView.setImageResource(R.mipmap.play);
         }
 
+    }
+
+    private static File getOutputMediaFile(int type) {
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "EIR.Media");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("EIR.Media", "failed to create directory");
+                return null;
+            }
+        }
+    }
+
+    private Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
     }
 
     @Override
