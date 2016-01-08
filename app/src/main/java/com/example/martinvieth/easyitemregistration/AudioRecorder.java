@@ -16,6 +16,10 @@ import android.net.Uri;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+//import static com.example.martinvieth.easyitemregistration.AudioRecorder.getOutputMediaFile;
 
 
 public class AudioRecorder extends Activity implements View.OnClickListener {
@@ -43,7 +47,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         if (v == btnStartRecord){
             Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
-            imgView.setImageResource(R.mipmap.recordpressed);
+            imgView.setImageResource(R.mipmap.record);
         }
 
         if (v == btnStopRecord){
@@ -52,9 +56,10 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
             imgView.setImageResource(R.mipmap.play);
         }
 
-        if (v == btnPlay){
+        if (v == btnPlay) {
             startPlaying();
             imgView.setImageResource(R.mipmap.pause);
+
         }
 
         if (v == btnStop){
@@ -63,22 +68,28 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
 
         if (v == btnSave){
-            fileUri = getOutputMediaFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
+    //        fileUri = getOutputMediaFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
         }
 
         if (v == btnPause){
-            mPlayer.pause();
             imgView.setImageResource(R.mipmap.play);
+            if (btnPause.getText() == "Resume") {
+                mPlayer.start();
+                btnPause.setText("Pause");
+            } else {
+                mPlayer.pause();
+                btnPause.setText("Resume");
+            }
         }
 
     }
 
-    private static File getOutputMediaFile(int type) {
+  /*  private static getOutputMediaFile(int type){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "EIR.Media");
+                Environment.DIRECTORY_MUSIC), "EIR.Media");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -89,12 +100,17 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
                 return null;
             }
         }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "REC_" + timeStamp + ".3gp");
+        return mediaFile;
     }
 
     private Uri getOutputMediaFileUri(int type) {
         return Uri.fromFile(getOutputMediaFile(type));
     }
-
+*/
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
