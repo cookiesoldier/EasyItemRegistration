@@ -26,6 +26,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnSave;
     Button btnPlay;
     Button btnStop;
+    Button btnPause;
 
     final String LOG_TAG = "AudioRecordTest";
     String mFileName = null;
@@ -59,6 +60,11 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         if (v == btnSave){
 
         }
+
+        if (v == btnPause){
+            mPlayer.pause();
+        }
+
     }
 
     @Override
@@ -80,6 +86,9 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
+
+        btnPause = (Button) findViewById(R.id.btnPause);
+        btnPause.setOnClickListener(this);
 
     }
 
