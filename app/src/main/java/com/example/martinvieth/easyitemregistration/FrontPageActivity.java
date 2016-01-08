@@ -129,11 +129,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-
         Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
         edtRecieveDate.setText(tsTemp.toString());
         edtDatingFrom.setText(tsTemp.toString());
         edtDatingTo.setText(tsTemp.toString());
+        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
+            }
+        });
 
 
     }
@@ -147,42 +152,44 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     Calendar myCalendar = Calendar.getInstance();
 
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, monthOfYear);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateLabel();
-        }
 
-    };
-
-    private void updateLabel() {
+    private void updateLabel(int label) {
 
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
+        if (label == 2) {
+            edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+        }
+        if (label == 1) {
 
-        edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
-        edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
-        edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+            edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+        }
+        if (label == 3) {
+            edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+        }
     }
     
     @Override
     public void onClick(View v) {
 
-        if (v == edtDatingFrom || v == edtRecieveDate || v == edtDatingTo) {
-            new DatePickerDialog(FrontPageActivity.this, date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            //String myFormat = "dd/MM/yyyy"; //In which you need put here
+            //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
+
+        if (v == edtDatingFrom) {
+            getSetDate(2);
+
         }
+            if (v == edtRecieveDate) {
+                getSetDate(1);
 
+            }
+            if (v == edtDatingTo) {
+                getSetDate(3);
+            }
 
-        if (v == btnGalleryPhoto) {
+            if (v == btnGalleryPhoto) {
 
 
             Intent intent = new Intent();
@@ -280,6 +287,32 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
+    private void getSetDate( final int labelNr) {
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(labelNr);
+
+            }
+
+        };
+
+
+        new DatePickerDialog(FrontPageActivity.this, date, myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+
+
+
+    }
 
     private ArrayList<String> ItemListParse(String items) throws JSONException {
 
