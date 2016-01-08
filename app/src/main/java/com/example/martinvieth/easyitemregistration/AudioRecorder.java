@@ -2,15 +2,11 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Activity;
-import android.widget.LinearLayout;
-import android.os.Bundle;
+import android.view.Window;
+import android.widget.ImageView;
 import android.os.Environment;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.content.Context;
 import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
@@ -28,6 +24,8 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnStop;
     Button btnPause;
 
+    ImageView imgView;
+
     final String LOG_TAG = "AudioRecordTest";
     String mFileName = null;
     String uniqueName = String.valueOf(System.currentTimeMillis());
@@ -42,19 +40,23 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         if (v == btnStartRecord){
             Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
+            imgView.setImageResource(R.mipmap.recordpressed);
         }
 
         if (v == btnStopRecord){
             Toast.makeText(getApplicationContext(), "Recording was successful", Toast.LENGTH_LONG).show();
             stopRecording();
+            imgView.setImageResource(R.mipmap.play);
         }
 
         if (v == btnPlay){
             startPlaying();
+            imgView.setImageResource(R.mipmap.pause);
         }
 
         if (v == btnStop){
             stopPlaying();
+            imgView.setImageResource(R.mipmap.play);
         }
 
         if (v == btnSave){
@@ -63,6 +65,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         if (v == btnPause){
             mPlayer.pause();
+            imgView.setImageResource(R.mipmap.play);
         }
 
     }
@@ -70,7 +73,9 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_audio_recorder);
+
 
         btnStartRecord = (Button) findViewById(R.id.btnStartRecord);
         btnStartRecord.setOnClickListener(this);
@@ -89,6 +94,8 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         btnPause = (Button) findViewById(R.id.btnPause);
         btnPause.setOnClickListener(this);
+
+        imgView = (ImageView) findViewById(R.id.imgRPP);
 
     }
 
