@@ -100,7 +100,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         */
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
-        btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
+        //btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
@@ -138,10 +138,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
 
-        //Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-        //edtRecieveDate.setText(tsTemp.toString());
-        //edtDatingFrom.setText(tsTemp.toString());
-        //edtDatingTo.setText(tsTemp.toString());
         findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
