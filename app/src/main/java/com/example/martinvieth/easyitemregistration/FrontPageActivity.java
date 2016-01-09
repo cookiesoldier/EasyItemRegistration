@@ -14,18 +14,22 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -68,6 +72,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtTextRefProducer;
     EditText edtGeoArea;
 
+    TextView textView7;
+
+
+    String data;
+    private String file = "mydata";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer;
@@ -105,6 +114,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
+        textView7 = (TextView)findViewById(R.id.textView7);
+
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
@@ -120,10 +131,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setFocusable(false);
 
         btnGalleryPhoto.setOnClickListener(this);
-        btnAccept.setOnClickListener(this);
+        //btnAccept.setOnClickListener(this);
         edtRecieveDate.setOnClickListener(this);
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
+
 
 
         //Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
@@ -150,7 +162,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     Calendar myCalendar = Calendar.getInstance();
 
 
-
     private void updateLabel(int label) {
 
         String myFormat = "dd/MM/yyyy"; //In which you need put here
@@ -168,11 +179,27 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
-        @Override
+    @Override
     public void onClick(View v) {
 
-            //String myFormat = "dd/MM/yyyy"; //In which you need put here
-            //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
+        /*
+        data = edtRecieveDate.getText().toString();
+
+
+        try {
+            FileOutputStream fOut = openFileOutput(file,MODE_WORLD_READABLE);
+            fOut.write(data.getBytes());
+            fOut.close();
+            Toast.makeText(getBaseContext(),"file saved",Toast.LENGTH_SHORT).show();
+        }
+
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        */
+
+
 
         if (v == edtDatingFrom) {
             getSetDate(2);
@@ -202,6 +229,26 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
+
+        /*
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    FileInputStream fin = openFileInput(file);
+                    int c;
+                    String temp = "";
+
+                    while ((c = fin.read()) != -1) {
+                        temp = temp + Character.toString((char) c);
+                    }
+                    Toast.makeText(getBaseContext(), "Registration Saved :-)", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
+            }
+        });
+        */
+
         if (v == btnAccept) {
 
             new AsyncTask() {
@@ -278,6 +325,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             }.execute(100);
 
         }
+
     }
 
     private void getSetDate( final int labelNr) {
@@ -334,7 +382,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
