@@ -76,7 +76,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     String data;
-    private String file = "mydata";
+    private String file = "My Data";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer;
@@ -100,7 +100,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         */
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
-        //btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
+        btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
@@ -114,7 +114,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
-        textView7 = (TextView)findViewById(R.id.textView7);
+        //textView7 = (TextView)findViewById(R.id.textView7);
 
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
@@ -135,7 +135,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRecieveDate.setOnClickListener(this);
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
-
 
 
         findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
@@ -176,41 +175,23 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
     @Override
+
     public void onClick(View v) {
-
-        /*
-        data = edtRecieveDate.getText().toString();
-
-
-        try {
-            FileOutputStream fOut = openFileOutput(file,MODE_WORLD_READABLE);
-            fOut.write(data.getBytes());
-            fOut.close();
-            Toast.makeText(getBaseContext(),"file saved",Toast.LENGTH_SHORT).show();
-        }
-
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        */
-
-
 
         if (v == edtDatingFrom) {
             getSetDate(2);
 
         }
 
-            if (v == edtRecieveDate) {
-                getSetDate(1);
+        if (v == edtRecieveDate) {
+            getSetDate(1);
 
-            }
-            if (v == edtDatingTo) {
-                getSetDate(3);
-            }
+        }
+        if (v == edtDatingTo) {
+            getSetDate(3);
+        }
 
-            if (v == btnGalleryPhoto) {
+        if (v == btnGalleryPhoto) {
 
 
             Intent intent = new Intent();
@@ -227,6 +208,25 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
 
+
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                data = edtRecieveDate.getText().toString();
+
+                try {
+                    FileOutputStream fOut = openFileOutput(file, MODE_PRIVATE);
+                    fOut.write(data.getBytes());
+                    fOut.close();
+                    Toast.makeText(getBaseContext(), "File Saved", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
         /*
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,12 +239,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     while ((c = fin.read()) != -1) {
                         temp = temp + Character.toString((char) c);
                     }
-                    Toast.makeText(getBaseContext(), "Registration Saved :-)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "File Read :-)", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }
             }
         });
         */
+
 
         if (v == btnAccept) {
 
@@ -325,7 +326,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     }
 
-    private void getSetDate( final int labelNr) {
+    private void getSetDate(final int labelNr) {
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -345,9 +346,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         new DatePickerDialog(FrontPageActivity.this, date, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-
-
 
 
     }
@@ -554,7 +552,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     /**
      * Denne metode lægger de 3 først billeder URI's fra selectedimages ind i showimages som bitmaps
-     *
      */
     public void bitMapAdd() {
         AssetFileDescriptor fileDS = null;
@@ -572,7 +569,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 input.close();
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
-                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size()-1-x)));
+                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
 
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
@@ -591,17 +588,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public void updatePhotoThump() {
         Log.d("updateThump images: ", Integer.toString(shownImages.size()));
 
-            if(shownImages.size() == 1) {
-                photoThumb1.setImageBitmap(shownImages.get(0));
-            }else if(shownImages.size() == 2){
-                photoThumb1.setImageBitmap(shownImages.get(0));
-                photoThumb2.setImageBitmap(shownImages.get(1));
-            }else if(shownImages.size() >= 3){
-                photoThumb1.setImageBitmap(shownImages.get(0));
-                photoThumb2.setImageBitmap(shownImages.get(1));
-                photoThumb3.setImageBitmap(shownImages.get(2));
-            }
-
+        if (shownImages.size() == 1) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+        } else if (shownImages.size() == 2) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+            photoThumb2.setImageBitmap(shownImages.get(1));
+        } else if (shownImages.size() >= 3) {
+            photoThumb1.setImageBitmap(shownImages.get(0));
+            photoThumb2.setImageBitmap(shownImages.get(1));
+            photoThumb3.setImageBitmap(shownImages.get(2));
+        }
 
     }
 }
