@@ -162,12 +162,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
+        if (label == 1) {
+            edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+        }
         if (label == 2) {
             edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
-        }
-        if (label == 1) {
-
-            edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
         }
         if (label == 3) {
             edtDatingTo.setText(sdf.format(myCalendar.getTime()));
