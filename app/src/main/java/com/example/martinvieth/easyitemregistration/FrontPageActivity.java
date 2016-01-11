@@ -3,12 +3,10 @@ package com.example.martinvieth.easyitemregistration;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,18 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.media.MediaRecorder;
-import android.media.MediaPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +43,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
-    final databaseDAO dataDAO = new databaseDAO();
+    //Context c = getApplicationContext();
+    final databaseDAO dataDAO = new databaseDAO(this);
     private Uri fileUri;
 
     ImageButton btnMenu;
@@ -170,7 +164,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             edtDatingTo.setText(sdf.format(myCalendar.getTime()));
         }
     }
-    
+
     @Override
     public void onClick(View v) {
 
@@ -206,19 +200,25 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
         if (v == btnAccept) {
-
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
+                        if (itemNrDeterminer == -1) {
+                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                return "succes";
+                            } else {
+                                return "failed";
+                            }
 
-
-                        if (dataDAO.createItem(getDataAndFiles(-1))) {
-                            return "succes";
                         } else {
-                            return "failed";
-                        }
 
+                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                return "succes";
+                            } else {
+                                return "failed";
+                            }
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -241,6 +241,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
                     }
+                    itemNrDeterminer = -1;
 
                 }
             }.execute(100);
@@ -479,7 +480,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
     private void deleteDataAndFiles() {
-        edtItemHeadline.setText("");
+
         edtItemHeadline.setText("");
         edtBeskrivelse.setText("");
         edtRecieveDate.setText("");
@@ -490,10 +491,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtGeoArea.setText("");
         shownImages.clear();
 
-        Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-        edtRecieveDate.setText(tsTemp.toString());
-        edtDatingFrom.setText(tsTemp.toString());
-        edtDatingTo.setText(tsTemp.toString());
 
     }
 
@@ -510,7 +507,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    shownImages);
+                    selectedImages);
         } else {
             registrering = new RegistreringsDTO(
                     Integer.toString(itemNr),
@@ -522,7 +519,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    shownImages);
+                    selectedImages);
         }
 
 

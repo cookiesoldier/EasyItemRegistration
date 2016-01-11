@@ -1,6 +1,7 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class RegistreringsDTO {
     //er en small int??
     private String geoArea;
     //bruges ikke endu
-    private List<Bitmap> images;
+    private List<Uri> images;
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse){
         this.itemHeadline = itemHeadline;
@@ -37,7 +38,7 @@ public class RegistreringsDTO {
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<Bitmap> images){
+                            String refProducer, String geoArea, List<Uri> images){
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
         this.recieveDate = recieveDate;
@@ -64,7 +65,7 @@ public class RegistreringsDTO {
      */
     public RegistreringsDTO(String itemNr, String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<Bitmap> images){
+                            String refProducer, String geoArea, List<Uri> images){
         this.itemNr = itemNr;
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
@@ -113,7 +114,7 @@ public class RegistreringsDTO {
         return geoArea;
     }
 
-    public List<Bitmap> getImages() {
+    public List<Uri> getImages() {
         return images;
     }
 
