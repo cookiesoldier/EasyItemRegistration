@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaRecorder;
+import android.media.MediaPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,6 +132,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
 
+        //Gør man ikke kan skrive i de 3 fleter med datoer fra datepicker.
         edtRecieveDate.setFocusable(false);
         edtDatingFrom.setFocusable(false);
         edtDatingTo.setFocusable(false);
@@ -145,8 +150,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
             }
         });
-
-
     }
 
     @Override
@@ -158,15 +161,24 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     Calendar myCalendar = Calendar.getInstance();
 
-
     private void updateLabel(int label) {
 
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
+        if (label == 1) {
+            edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+        }
+        if (label == 2) {
+            edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+        }
+        if (label == 3) {
+            edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+        }
     }
 
     @Override
     public void onClick(View v) {
-
 
         if (v == edtRecieveDate) {
             getSetDate(1);
@@ -183,7 +195,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnGalleryPhoto) {
 
-
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -197,15 +208,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
-
-/*
+        
         btnAccept.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
                 data = edtRecieveDate.getText().toString();
 
                 try {
-                    FileOutputStream fOut = openFileOutput(file, MODE_PRIVATE);
+                    FileOutputStream fOut = openFileOutput(file, Context.MODE_APPEND | Context.MODE_WORLD_READABLE);
                     fOut.write(data.getBytes());
                     fOut.close();
                     Toast.makeText(getBaseContext(), "File Saved", Toast.LENGTH_SHORT).show();
@@ -215,7 +225,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
             }
         });
-*/
+        
         /*
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -525,8 +535,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtGeoArea.setText("");
         shownImages.clear();
         selectedImages.clear();
-
-
     }
 
     private RegistreringsDTO getDataAndFiles(int itemNr) {
@@ -581,8 +589,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
                 shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
-
-
+                
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
                 e.printStackTrace();
@@ -608,7 +615,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             photoThumb2.setImageBitmap(shownImages.get(1));
             photoThumb3.setImageBitmap(shownImages.get(2));
         }
-
-
+        
     }
 }
