@@ -14,12 +14,14 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,6 +29,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -69,6 +74,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtTextRefProducer;
     EditText edtGeoArea;
 
+    TextView textView7;
+
+
+    String data;
+    private String file = "My Data";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer;
@@ -106,6 +116,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
+        //textView7 = (TextView)findViewById(R.id.textView7);
+
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
@@ -116,6 +128,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
 
+        edtRecieveDate.setFocusable(false);
+        edtDatingFrom.setFocusable(false);
+        edtDatingTo.setFocusable(false);
+
         btnGalleryPhoto.setOnClickListener(this);
         btnAccept.setOnClickListener(this);
         edtRecieveDate.setOnClickListener(this);
@@ -123,10 +139,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-        Timestamp tsTemp = new Timestamp(System.currentTimeMillis());
-        edtRecieveDate.setText(tsTemp.toString());
-        edtDatingFrom.setText(tsTemp.toString());
-        edtDatingTo.setText(tsTemp.toString());
         findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +159,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     Calendar myCalendar = Calendar.getInstance();
 
 
-
     private void updateLabel(int label) {
 
 
@@ -156,22 +167,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-            //String myFormat = "dd/MM/yyyy"; //In which you need put here
-            //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
+        if (v == edtRecieveDate) {
+            getSetDate(1);
+
+        }
         if (v == edtDatingFrom) {
             getSetDate(2);
 
         }
-            if (v == edtRecieveDate) {
-                getSetDate(1);
 
-            }
-            if (v == edtDatingTo) {
-                getSetDate(3);
-            }
+        if (v == edtDatingTo) {
+            getSetDate(3);
+        }
 
-            if (v == btnGalleryPhoto) {
+        if (v == btnGalleryPhoto) {
 
 
             Intent intent = new Intent();
@@ -187,6 +197,46 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
+
+
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                data = edtRecieveDate.getText().toString();
+
+                try {
+                    FileOutputStream fOut = openFileOutput(file, MODE_PRIVATE);
+                    fOut.write(data.getBytes());
+                    fOut.close();
+                    Toast.makeText(getBaseContext(), "File Saved", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+        /*
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    FileInputStream fin = openFileInput(file);
+                    int c;
+                    String temp = "";
+
+                    while ((c = fin.read()) != -1) {
+                        temp = temp + Character.toString((char) c);
+                    }
+                    Toast.makeText(getBaseContext(), "File Read :-)", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
+            }
+        });
+        */
+
+
         if (v == btnAccept) {
             new AsyncTask() {
                 @Override
@@ -274,9 +324,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             }.execute(100);
 
         }
+
     }
 
-    private void getSetDate( final int labelNr) {
+    private void getSetDate(final int labelNr) {
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -296,9 +347,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         new DatePickerDialog(FrontPageActivity.this, date, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-
-
 
 
     }
@@ -535,6 +583,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
                 shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
+             
+
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
                 e.printStackTrace();

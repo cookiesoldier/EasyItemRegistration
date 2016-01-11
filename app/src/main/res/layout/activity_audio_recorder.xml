@@ -39,12 +39,18 @@
             android:id="@+id/btnSave"
             android:layout_gravity="center_horizontal" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgRPP"
+            android:layout_gravity="center_horizontal" />
+
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="125dp">
 
             <Button
-                android:layout_width="200px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Play"
                 android:id="@+id/btnPlay"
@@ -52,12 +58,22 @@
                 android:layout_column="0" />
 
             <Button
-                android:layout_width="200px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pause"
+                android:id="@+id/btnPause"
+                android:layout_row="5"
+                android:layout_column="2"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Stop"
                 android:id="@+id/btnStop"
                 android:layout_row="5"
                 android:layout_column="3" />
+
         </GridLayout>
 
     </LinearLayout>
