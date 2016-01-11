@@ -296,7 +296,7 @@ public class databaseDAO {
                 String type = cR.getType(uri);
                 //Vi check er om filens type er en af dem som databasen kan bruge.
                 if (!Arrays.asList(okTypes).contains(type)) {
-                    Log.d("Not ok fileType to upload: ", type);
+                    Log.d("Error:FileType: ", type);
                     return false;
                 }
                 //Gem billedet i byteArray

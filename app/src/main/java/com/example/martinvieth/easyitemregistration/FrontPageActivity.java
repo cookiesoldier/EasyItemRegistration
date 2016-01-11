@@ -198,7 +198,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
 
-
+/*
         btnAccept.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -215,8 +215,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
             }
         });
-
-
+*/
         /*
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,7 +234,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             }
         });
         */
-
 
         if (v == btnAccept) {
             new AsyncTask() {
@@ -363,7 +361,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             JSONObject dataPoint = jsonArrayData.getJSONObject(i);
             itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline"));
             // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
-            Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
+           // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
 
 
@@ -583,7 +581,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
                 shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
-             
+
 
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
