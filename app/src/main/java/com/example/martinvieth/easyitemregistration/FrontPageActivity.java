@@ -150,19 +150,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private void updateLabel(int label) {
 
-        String myFormat = "dd/MM/yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
-        if (label == 2) {
-            edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
-        }
-        if (label == 1) {
-
-            edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
-        }
-        if (label == 3) {
-            edtDatingTo.setText(sdf.format(myCalendar.getTime()));
-        }
     }
 
     @Override
@@ -490,6 +478,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
         shownImages.clear();
+        selectedImages.clear();
 
 
     }
@@ -546,13 +535,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 */
                 Log.d("Pree add selected", selectedImages.get(0).toString());
                 shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
-
             } catch (IOException e) {
                 Log.d("Error", "Could not find image file in storage.");
                 e.printStackTrace();
             }
-
-
         }
         Log.d("size of runs", Integer.toString(runs));
         updatePhotoThump();

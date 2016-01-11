@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -160,6 +161,7 @@ public class databaseDAO {
             urlConnection.disconnect();
             Log.d("Server response ----->", "The response is: " + response);
             if (response == 200 || response == 201) {
+               //sendPicSound(data);
                 return true;
             } else {
                 return false;
@@ -238,7 +240,6 @@ public class databaseDAO {
         }
 
 
-
     }
 
     public void deleteItem(int itemNr) throws IOException {
@@ -283,63 +284,72 @@ public class databaseDAO {
     }
 
     private boolean sendPicSound(RegistreringsDTO dataDTO) throws IOException {
-
+        String[] okTypes = {"image/png", "image/jpg", "image/jpeg",
+                "audio/mp4", "audio/3gp", "audio/3GPP", "audio/aac", "audio/mp3"};
         int response = 0;
-
-        //Så checker vi hvilken type filen er.
-        ContentResolver cR = frontPageActContext.getContentResolver();
-
-        String type =   cR.getType(dataDTO.getImages().get(0));
-        Log.d("File type test---->" , type);
-        //Så sæt content type til den fil type
-        url = new URL(urlString + "/items/" + dataDTO.getItemNr() + protString);
-
-       // getContentResolver().openInputStream(uri)
-        InputStream fileInputStream = cR.openInputStream(dataDTO.getImages().get(0));
-        byte[] bFile = new byte[fileInputStream.available()];
-
         try {
-            //convert file into array of bytes
-            fileInputStream.read(bFile);
-            fileInputStream.close();
+            for (Uri uri : dataDTO.getImages()) {
 
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
 
-        //Send filen til databasen
+                //Så checker vi hvilken type filen er.
+                ContentResolver cR = frontPageActContext.getContentResolver();
+                String type = cR.getType(uri);
+                //Vi check er om filens type er en af dem som databasen kan bruge.
+                if (!Arrays.asList(okTypes).contains(type)) {
+                    Log.d("Not ok fileType to upload: ", type);
+                    return false;
+                }
+                //Gem billedet i byteArray
+                InputStream fileInputStream = cR.openInputStream(uri);
+                byte[] bFile = new byte[fileInputStream.available()];
 
-        url = new URL(urlString + "/items/" + dataDTO.getItemNr() + protString);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
+                try {
+                    //convert file into array of bytes
+                    fileInputStream.read(bFile);
+                    fileInputStream.close();
 
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setDoInput(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            //Test til mathias database - virker!
-            urlConnection.setRequestProperty("Content-Type", type);
-            urlConnection.setRequestProperty("charset", "utf-8");
-            Log.d("File Byte Size --->",Integer.toString(bFile.length));
-            urlConnection.setRequestProperty("Content-Length", Integer.toString(bFile.length));
-            urlConnection.setUseCaches(false);
+                //Send filen til databasen
 
-            DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
-            wr.write(bFile);
+                url = new URL(urlString + "/items/" + dataDTO.getItemNr() + protString);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                try {
 
-            //test slut
-            urlConnection.connect();
-            response = urlConnection.getResponseCode();
-            Log.d("Server response ----->", "The response is: " + response);
+                    urlConnection.setReadTimeout(10000 /* milliseconds */);
+                    urlConnection.setConnectTimeout(15000 /* milliseconds */);
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setDoInput(true);
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                    //Type
+                    urlConnection.setRequestProperty("Content-Type", type);
+                    urlConnection.setRequestProperty("charset", "utf-8");
+                    Log.d("File Byte Size --->", Integer.toString(bFile.length));
+                    urlConnection.setRequestProperty("Content-Length", Integer.toString(bFile.length));
+                    urlConnection.setUseCaches(false);
 
-            Log.d("picture ---->", readStream(in));
+                    DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
+                    wr.write(bFile);
 
-            //check response kode
+                    //test slut
+                    urlConnection.connect();
+                    response = urlConnection.getResponseCode();
+                    Log.d("Server response ----->", "The response is: " + response);
+
+                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                    Log.d("picture ---->", readStream(in));
+
+                    //check response kode
+                } catch (Exception e) {
+                    urlConnection.disconnect();
+                    e.printStackTrace();
+
+                }
+            }
         } finally {
-            urlConnection.disconnect();
 
             if (response == 200 || response == 201) {
                 return true;
@@ -348,11 +358,5 @@ public class databaseDAO {
             }
 
         }
-
-        //????????
-        //Profit
     }
-
-
-
 }
