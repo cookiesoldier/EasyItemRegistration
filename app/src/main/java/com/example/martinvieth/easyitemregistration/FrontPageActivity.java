@@ -81,8 +81,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     TextView textView7;
 
 
-    String data;
-    private String file = "My Data";
+    //String data;
+    //private String file = "My Data";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer;
@@ -208,7 +208,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             captureImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
-        
+
+        /*
         btnAccept.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -225,6 +226,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
             }
         });
+        */
         
         /*
         btnAccept.setOnClickListener(new View.OnClickListener() {
