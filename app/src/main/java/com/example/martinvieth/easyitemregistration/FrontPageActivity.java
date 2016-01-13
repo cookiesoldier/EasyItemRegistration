@@ -2,7 +2,7 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.media.MediaRecorder;
@@ -78,6 +79,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtRefDonator;
     EditText edtTextRefProducer;
     EditText edtGeoArea;
+
+    private ProgressDialog progress;
+
 
     TextView textView7;
 
@@ -169,13 +173,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == edtRecieveDate) {
             getSetDate(1);
-
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
-
         }
-
         if (v == edtDatingTo) {
             getSetDate(3);
         }
@@ -247,21 +248,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             }
             else{
                 Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
-
             }
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
 
+
+
         if (v == btnSearch) {
+            showLoadingDialog();
             new AsyncTask() {
                 String items;
-
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
                         //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
-
                         items = dataDAO.itemList();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -279,7 +280,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
                     try {
-                        itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+                        System.out.println("trying...");
+                        ArrayList<String> a = ItemListParse(items);
+                        System.out.println("items : " + a.size());
+                        itemListActivity.putStringArrayListExtra("data", a);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -575,5 +580,27 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             photoThumb3.setImageBitmap(shownImages.get(2));
         }
         
+    }
+    public void showLoadingDialog() {
+
+        if (progress == null) {
+            progress = new ProgressDialog(this);
+            progress.setTitle("Loading");
+            progress.setMessage("Wait while Loading...");
+        }
+        progress.show();
+    }
+
+
+    public void dismissLoadingDialog() {
+
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
+    }
+
+    protected void onResume() {
+        dismissLoadingDialog();
+        super.onResume();
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.os.Environment;
 import android.widget.Button;
@@ -14,8 +15,11 @@ import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,14 +37,16 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnSave;
     Button btnPlay;
     Button btnStop;
-    Button btnPause;
 
     ImageView imgView;
     ListView recordList;
+    TextView audioTitelTxt;
+    EditText editAudioTitel;
 
     final String LOG_TAG = "AudioRecordTest";
     String mFileName = null;
     String uniqueName = String.valueOf(System.currentTimeMillis());
+    //String uniqueName = String.valueOf(editAudioTitel.getText());
     MediaRecorder mRecorder = null;
     MediaPlayer   mPlayer = null;
     private Uri fileUri;
@@ -83,30 +89,33 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
             imgView.setImageResource(R.mipmap.play);
         }
 
-        if (v == btnPlay) {
-            startPlaying();
-            imgView.setImageResource(R.mipmap.pause);
-
-        }
-
         if (v == btnStop){
             stopPlaying();
             imgView.setImageResource(R.mipmap.play);
         }
 
         if (v == btnSave){
-            
+
             //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
         }
 
-        if (v == btnPause){
-            imgView.setImageResource(R.mipmap.play);
-            if (btnPause.getText() == "Resume") {
-                mPlayer.start();
-                btnPause.setText("Pause");
-            } else {
+        if (v == btnPlay){
+            if (btnPlay.getText() == "Play"){
+                imgView.setImageResource(R.mipmap.pause);
+                startPlaying();
+                btnPlay.setText("Pause");
+            }
+
+            else if (btnPlay.getText() == "Pause") {
+                imgView.setImageResource(R.mipmap.play);
                 mPlayer.pause();
-                btnPause.setText("Resume");
+                btnPlay.setText("Resume");
+            }
+
+            else if (btnPlay.getText() == "Resume"){
+                imgView.setImageResource(R.mipmap.pause);
+                mPlayer.start();
+                btnPlay.setText("Pause");
             }
         }
 
@@ -136,10 +145,10 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
 
-        btnPause = (Button) findViewById(R.id.btnPause);
-        btnPause.setOnClickListener(this);
-
         imgView = (ImageView) findViewById(R.id.imgRPP);
+        audioTitelTxt = (TextView) findViewById(R.id.audioTitelTxt);
+        editAudioTitel = (EditText) findViewById(R.id.editAudioTitel);
+
         recordList = (ListView) findViewById(R.id.recordList);
         recordList.setClickable(true);
         ArrayAdapter<File> arrayAdapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, audioList);
