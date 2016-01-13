@@ -111,6 +111,7 @@ public class databaseDAO {
         //First we are gonna build the message to send to the server.
         int response = 0;
         JSONObject dublinCoreData = new JSONObject();
+        String itemID = null;
 
         try {
             dublinCoreData.put("itemheadline", data.getItemHeadline());
@@ -154,15 +155,19 @@ public class databaseDAO {
             Log.d("Server response ----->", "The response is: " + response);
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            String serverResponse = readStream(in);
+            JSONObject dataPoint = new JSONObject(serverResponse);
+            itemID = dataPoint.get("itemid").toString();
 
-            Log.d("asd", readStream(in));
+
+            Log.d("asd",serverResponse);
 
 
         } finally {
             urlConnection.disconnect();
             Log.d("Server response ----->", "The response is: " + response);
             if (response == 200 || response == 201) {
-               //sendPicSound(data);
+               sendPicSound(new RegistreringsDTO(itemID,data));
                 return true;
             } else {
                 return false;
@@ -294,6 +299,10 @@ public class databaseDAO {
         String[] okTypes = {"image/png", "image/jpg", "image/jpeg",
                 "audio/mp4", "audio/3gp", "audio/3GPP", "audio/aac", "audio/mp3"};
         int response = 0;
+        if(dataDTO.getItemNr()== null){
+            return false;
+
+        }
         try {
             for (Uri uri : dataDTO.getImages()) {
 

@@ -85,7 +85,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //private String file = "My Data";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
-    int itemNrDeterminer;
+    int itemNrDeterminer = -1;
 
     //De valgte billeder
     List<Uri> selectedImages = new ArrayList<>();
