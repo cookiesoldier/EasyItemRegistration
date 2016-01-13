@@ -2,6 +2,7 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -80,10 +81,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     TextView textView7;
 
-
-    //String data;
-    //private String file = "My Data";
-
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
 
@@ -112,9 +109,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb3 = (ImageView) findViewById(R.id.photoThumb3);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
-
-        //textView7 = (TextView)findViewById(R.id.textView7);
-
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
@@ -203,57 +197,63 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        if (itemNrDeterminer == -1) {
-                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
+            if (edtItemHeadline.getText().length() != 0) {
+                new AsyncTask() {
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            if (itemNrDeterminer == -1) {
+                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
 
-                        } else {
-
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
                             } else {
-                                return "failed";
+
+                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
 
-                @Override
-                protected void onProgressUpdate(Object... progress) {
 
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-                    //inform user item was added and delete the data and files so new can be added or if it failed
-                    if (result.equals("succes")) {
-                        deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
-                    } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
-
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
 
                     }
-                    itemNrDeterminer = -1;
 
-                }
-            }.execute(100);
+                    @Override
+                    protected void onPostExecute(Object result) {
+                        //inform user item was added and delete the data and files so new can be added or if it failed
+                        if (result.equals("succes")) {
+                            deleteDataAndFiles();
+                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        } else if (result.equals("failed")) {
+                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
+                        }
+                        itemNrDeterminer = -1;
+
+                    }
+                }.execute(100);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+
+            }
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
 
         if (v == btnSearch) {
-
             new AsyncTask() {
                 String items;
 
