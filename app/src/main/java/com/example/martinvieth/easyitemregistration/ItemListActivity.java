@@ -31,6 +31,7 @@ public class ItemListActivity extends Activity   {
         ArrayList<String> itemsParsed =intentExtras.getStringArrayListExtra("data");
 
 
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, itemsParsed);
 
         // Assign adapter to ListView
@@ -39,8 +40,7 @@ public class ItemListActivity extends Activity   {
         itemsListing.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // ListView Clicked item index
                 int itemPosition     = position;

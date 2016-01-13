@@ -175,13 +175,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == edtRecieveDate) {
             getSetDate(1);
-
+            Log.d("editRecieveDate",edtRecieveDate.getText().toString());
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
-
         }
-
         if (v == edtDatingTo) {
             getSetDate(3);
         }
@@ -280,6 +278,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
                     try {
                         itemListActivity.putStringArrayListExtra("data", ItemListParse(items));
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -325,7 +324,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
             JSONObject dataPoint = jsonArrayData.getJSONObject(i);
-            itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline"));
+            itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
             // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
            // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
@@ -392,6 +391,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 try {
                     itemData = dataDAO.getItem(itemNr);
                     Log.d("reply database", "svar fra database." + itemData);
+
 
                     //Så skal vi sætte data ind i vores registreringsDTO som opbevarer den data vi arbejder med nu.
 
@@ -492,6 +492,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb1.setImageDrawable(null);
         photoThumb2.setImageDrawable(null);
         photoThumb3.setImageDrawable(null);
+        itemNrDeterminer = -1;
         shownImages.clear();
         selectedImages.clear();
     }
