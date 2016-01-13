@@ -1,9 +1,7 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -19,13 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
 
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 //import static com.example.martinvieth.easyitemregistration.AudioRecorder.getOutputMediaFile;
 
@@ -56,9 +51,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     //Eventuel mulighed for at pause nuværende optagelse, således
     //der kan optages ét langt lydklip, i stedet for flere små
 
-    //Lav en liste over tidligere optagelser nedenunder knapperne,
-    //så man kan se de forrige optagelser og eventuelt mulighed for rename-option
-
     public ArrayList<File> getfile(File dir) {
         File listFile[] = dir.listFiles();
         if (listFile != null && listFile.length > 0) {
@@ -75,7 +67,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
         if (v == btnStartRecord){
             Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
@@ -95,7 +86,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
 
         if (v == btnSave){
-
             //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
         }
 
