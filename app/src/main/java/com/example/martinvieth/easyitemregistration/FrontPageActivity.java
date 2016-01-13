@@ -535,6 +535,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRefDonator.setText("");
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
+        photoThumb1.setImageDrawable(null);
+        photoThumb2.setImageDrawable(null);
+        photoThumb3.setImageDrawable(null);
         shownImages.clear();
         selectedImages.clear();
     }

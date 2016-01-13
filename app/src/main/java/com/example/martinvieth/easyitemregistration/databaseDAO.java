@@ -31,6 +31,7 @@ import java.util.List;
  * <p/>
  * Tanken med denne klasse er at den skal stå for at sende og requeste data til/fra databasen, vi vil primært arbejde
  * med registreringsDTO objekter.
+ * Det hele burde nok køre som en service så man ikke kan afslutte det før tid, og burde nok også give en loading knap.
  */
 public class databaseDAO {
 
@@ -271,7 +272,7 @@ public class databaseDAO {
 
     }
 
-    private String readStream(InputStream is) throws IOException {
+    public String readStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
         String line;
@@ -283,6 +284,12 @@ public class databaseDAO {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param dataDTO the dto in which the images and sound files is contained
+     * @return if it succeded in sending the last image to server
+     * @throws IOException
+     */
     private boolean sendPicSound(RegistreringsDTO dataDTO) throws IOException {
         String[] okTypes = {"image/png", "image/jpg", "image/jpeg",
                 "audio/mp4", "audio/3gp", "audio/3GPP", "audio/aac", "audio/mp3"};
@@ -332,16 +339,12 @@ public class databaseDAO {
 
                     DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
                     wr.write(bFile);
-
                     //test slut
                     urlConnection.connect();
                     response = urlConnection.getResponseCode();
                     Log.d("Server response ----->", "The response is: " + response);
-
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
                     Log.d("picture ---->", readStream(in));
-
                     //check response kode
                 } catch (Exception e) {
                     urlConnection.disconnect();
