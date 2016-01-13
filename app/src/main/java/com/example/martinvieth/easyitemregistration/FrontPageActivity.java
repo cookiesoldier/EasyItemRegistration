@@ -91,7 +91,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //private String file = "My Data";
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
-    int itemNrDeterminer;
+    int itemNrDeterminer = -1;
 
     //De valgte billeder
     List<Uri> selectedImages = new ArrayList<>();
@@ -103,13 +103,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
-
-        /*
-        btnMenu = (ImageButton) findViewById(R.id.imageButtonMenuIcon);
-        btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
-        btnMenu.setImageResource(R.drawable.ic_burgermenu);
-        btnSearch.setImageResource(R.drawable.ic_search);
-        */
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
@@ -212,44 +205,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             startActivityForResult(captureImageIntent, IMAGE_CAPTURE);
         }
 
-        /*
-        btnAccept.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                data = edtRecieveDate.getText().toString();
-
-                try {
-                    FileOutputStream fOut = openFileOutput(file, Context.MODE_APPEND | Context.MODE_WORLD_READABLE);
-                    fOut.write(data.getBytes());
-                    fOut.close();
-                    Toast.makeText(getBaseContext(), "File Saved", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        });
-        */
-        
-        /*
-        btnAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    FileInputStream fin = openFileInput(file);
-                    int c;
-                    String temp = "";
-
-                    while ((c = fin.read()) != -1) {
-                        temp = temp + Character.toString((char) c);
-                    }
-                    Toast.makeText(getBaseContext(), "File Read :-)", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                }
-            }
-        });
-        */
-
         if (v == btnAccept) {
             new AsyncTask() {
                 @Override
@@ -299,7 +254,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
-        //Den åbner tastatur op når appen åbnes, måske knapt så godt.
 
 
 
@@ -544,6 +498,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRefDonator.setText("");
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
+        photoThumb1.setImageDrawable(null);
+        photoThumb2.setImageDrawable(null);
+        photoThumb3.setImageDrawable(null);
         shownImages.clear();
         selectedImages.clear();
     }
