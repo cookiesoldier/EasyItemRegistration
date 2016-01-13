@@ -24,13 +24,13 @@ public class ItemListActivity extends Activity   {
         setContentView(R.layout.activity_item_list);
 
         Intent intentExtras = getIntent();
-
+        System.out.println("intent "+intentExtras);
         itemsListing = (ListView) findViewById(R.id.lVItems);
 
 
         ArrayList<String> itemsParsed =intentExtras.getStringArrayListExtra("data");
 
-
+        System.out.println("listens længde: "+ itemsParsed.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, itemsParsed);
 
         // Assign adapter to ListView
