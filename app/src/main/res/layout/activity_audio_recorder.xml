@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -18,63 +20,92 @@
         android:layout_alignParentEnd="true"
         android:weightSum="1">
 
-        <Button
-            android:layout_width="400px"
-            android:layout_height="wrap_content"
-            android:text="Start recording"
-            android:id="@+id/btnStartRecord"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="400px"
-            android:layout_height="wrap_content"
-            android:text="Stop recording"
-            android:id="@+id/btnStopRecord"
-            android:layout_gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="400px"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:id="@+id/btnSave"
-            android:layout_gravity="center_horizontal" />
-
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imgRPP"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Titel"
+            android:id="@+id/audioTitelTxt" />
+
+        <EditText
+            android:id="@+id/editAudioTitel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Start recording"
+                android:id="@+id/btnStartRecord"
+                android:layout_row="0"
+                android:layout_column="0" />
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="25dp"
+                android:id="@+id/imgRPP"
+                android:layout_weight="0.5"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Stop recording"
+                android:id="@+id/btnStopRecord"
+                android:layout_row="0"
+                android:layout_column="3" />
+
+        </LinearLayout>
 
         <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="125dp">
+            android:layout_height="wrap_content">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Play"
                 android:id="@+id/btnPlay"
-                android:layout_row="5"
-                android:layout_column="0" />
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_rowWeight="0.5" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pause"
-                android:id="@+id/btnPause"
-                android:layout_row="5"
-                android:layout_column="2"
-                android:layout_gravity="center_horizontal" />
-
-            <Button
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:text="Stop"
                 android:id="@+id/btnStop"
-                android:layout_row="5"
-                android:layout_column="3" />
+                android:layout_row="1"
+                android:layout_column="3"
+                android:layout_rowWeight="0.5" />
 
         </GridLayout>
 
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="176dp"
+            android:id="@+id/recordList"
+            android:choiceMode="multipleChoice"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/btnSave"
+            android:layout_row="8"
+            android:layout_column="0"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            />
+
     </LinearLayout>
+
 </RelativeLayout>

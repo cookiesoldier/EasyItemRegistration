@@ -1,9 +1,12 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.os.Environment;
 import android.widget.Button;
@@ -11,12 +14,17 @@ import android.view.View;
 import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 //import static com.example.martinvieth.easyitemregistration.AudioRecorder.getOutputMediaFile;
@@ -29,17 +37,41 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     Button btnSave;
     Button btnPlay;
     Button btnStop;
-    Button btnPause;
 
     ImageView imgView;
+    ListView recordList;
+    TextView audioTitelTxt;
+    EditText editAudioTitel;
 
     final String LOG_TAG = "AudioRecordTest";
     String mFileName = null;
     String uniqueName = String.valueOf(System.currentTimeMillis());
+    //String uniqueName = String.valueOf(editAudioTitel.getText());
     MediaRecorder mRecorder = null;
     MediaPlayer   mPlayer = null;
     private Uri fileUri;
+    private File root;
+    private ArrayList<File> audioList = new ArrayList<File>();
 
+    //Eventuel mulighed for at pause nuværende optagelse, således
+    //der kan optages ét langt lydklip, i stedet for flere små
+
+    //Lav en liste over tidligere optagelser nedenunder knapperne,
+    //så man kan se de forrige optagelser og eventuelt mulighed for rename-option
+
+    public ArrayList<File> getfile(File dir) {
+        File listFile[] = dir.listFiles();
+        if (listFile != null && listFile.length > 0) {
+            for (int i = 0; i < listFile.length; i++) {
+
+                if (listFile[i].getName().endsWith(".3gp")) {
+                    audioList.add(listFile[i]);
+                    getfile(listFile[i]);
+                }
+            }
+        }
+        return audioList;
+    }
 
     @Override
     public void onClick(View v) {
@@ -48,6 +80,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
             Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
             imgView.setImageResource(R.mipmap.record);
+            getfile(root);
         }
 
         if (v == btnStopRecord){
@@ -56,67 +89,46 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
             imgView.setImageResource(R.mipmap.play);
         }
 
-        if (v == btnPlay) {
-            startPlaying();
-            imgView.setImageResource(R.mipmap.pause);
-
-        }
-
         if (v == btnStop){
             stopPlaying();
             imgView.setImageResource(R.mipmap.play);
         }
 
         if (v == btnSave){
-    //        fileUri = getOutputMediaFileUri(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
+
+            //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
         }
 
-        if (v == btnPause){
-            imgView.setImageResource(R.mipmap.play);
-            if (btnPause.getText() == "Resume") {
-                mPlayer.start();
-                btnPause.setText("Pause");
-            } else {
+        if (v == btnPlay){
+            if (btnPlay.getText() == "Play"){
+                imgView.setImageResource(R.mipmap.pause);
+                startPlaying();
+                btnPlay.setText("Pause");
+            }
+
+            else if (btnPlay.getText() == "Pause") {
+                imgView.setImageResource(R.mipmap.play);
                 mPlayer.pause();
-                btnPause.setText("Resume");
+                btnPlay.setText("Resume");
+            }
+
+            else if (btnPlay.getText() == "Resume"){
+                imgView.setImageResource(R.mipmap.pause);
+                mPlayer.start();
+                btnPlay.setText("Pause");
             }
         }
 
     }
 
-  /*  private static getOutputMediaFile(int type){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MUSIC), "EIR.Media");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("EIR.Media", "failed to create directory");
-                return null;
-            }
-        }
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "REC_" + timeStamp + ".3gp");
-        return mediaFile;
-    }
-
-    private Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-*/
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_audio_recorder);
 
+        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        getfile(root);
 
         btnStartRecord = (Button) findViewById(R.id.btnStartRecord);
         btnStartRecord.setOnClickListener(this);
@@ -133,10 +145,14 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
 
-        btnPause = (Button) findViewById(R.id.btnPause);
-        btnPause.setOnClickListener(this);
-
         imgView = (ImageView) findViewById(R.id.imgRPP);
+        audioTitelTxt = (TextView) findViewById(R.id.audioTitelTxt);
+        editAudioTitel = (EditText) findViewById(R.id.editAudioTitel);
+
+        recordList = (ListView) findViewById(R.id.recordList);
+        recordList.setClickable(true);
+        ArrayAdapter<File> arrayAdapter = new ArrayAdapter<File>(this, android.R.layout.simple_list_item_1, audioList);
+        recordList.setAdapter(arrayAdapter);
 
     }
 
@@ -198,3 +214,30 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     }
 }
 
+ /*  private static getOutputMediaFile(int type){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MUSIC), "EIR.Media");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("EIR.Media", "failed to create directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "REC_" + timeStamp + ".3gp");
+        return mediaFile;
+    }
+
+    private Uri getOutputMediaFileUri(int type) {
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+*/

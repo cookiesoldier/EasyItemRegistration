@@ -32,6 +32,7 @@ public class ItemListActivity extends Activity   {
 
 
 
+        System.out.println("listens længde: "+ itemsParsed.size());
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, itemsParsed);
 
         // Assign adapter to ListView
