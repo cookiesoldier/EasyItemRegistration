@@ -88,6 +88,7 @@
                     android:id="@+id/EditTextItemHeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
@@ -193,6 +194,7 @@
                     android:id="@+id/editTextGeoArea"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:singleLine="true"
                     android:layout_gravity="center_horizontal" />
 
 

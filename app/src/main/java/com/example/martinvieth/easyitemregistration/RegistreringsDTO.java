@@ -19,7 +19,7 @@ public class RegistreringsDTO {
   private String itemNr;
     private String itemHeadline;
     private String beskrivelse;
-    //burde være et timestamp ifølge databasen
+
     private  String recieveDate;
     private  String datingFrom;
     private  String datingTo;
@@ -28,7 +28,7 @@ public class RegistreringsDTO {
     private  String refProducer;
     //er en small int??
     private String geoArea;
-    //bruges ikke endu
+
     private List<Uri> images;
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse){
@@ -36,6 +36,18 @@ public class RegistreringsDTO {
         this.beskrivelse = beskrivelse;
     }
 
+    /**
+     *
+     * @param itemHeadline
+     * @param beskrivelse
+     * @param recieveDate
+     * @param datingFrom
+     * @param datingTo
+     * @param refDonator
+     * @param refProducer
+     * @param geoArea
+     * @param images
+     */
     public RegistreringsDTO(String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
                             String refProducer, String geoArea, List<Uri> images){
@@ -76,6 +88,20 @@ public class RegistreringsDTO {
         this.refProducer = refProducer;
         this.geoArea = geoArea;
         this.images = images;
+    }
+    public RegistreringsDTO(String itemNr,RegistreringsDTO data){
+        this.itemNr = itemNr;
+        this.itemHeadline = data.getItemHeadline();
+        this.beskrivelse = data.getBeskrivelse();
+        this.recieveDate = data.getRecieveDate();
+        this.datingFrom = data.getDatingFrom();
+        this.datingTo = data.getDatingTo();
+        this.refDonator = data.getRefDonator();
+        this.refProducer = data.getRefProducer();
+        this.geoArea = data.getGeoArea();
+        this.images = data.getImages();
+
+
     }
 
 
