@@ -154,17 +154,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private void updateLabel(int label) {
 
-        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        String myFormat = "yyyy/MM/dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
         if (label == 1) {
             edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+            Log.d("editRecieveDate",edtRecieveDate.getText().toString());
         }
         if (label == 2) {
             edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+            Log.d("editDatingFrom", edtDatingFrom.getText().toString());
         }
         if (label == 3) {
             edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+            Log.d("edtDatingTo", edtDatingTo.getText().toString());
         }
     }
 
@@ -173,12 +176,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == edtRecieveDate) {
             getSetDate(1);
+            Log.d("edtRecieveData", edtRecieveDate.getText().toString());
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
+            Log.d("edtRecieveData", edtDatingFrom.getText().toString());
         }
         if (v == edtDatingTo) {
             getSetDate(3);
+            Log.d("edtRecieveData", edtDatingTo.getText().toString());
         }
 
         if (v == btnGalleryPhoto) {
@@ -280,7 +286,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
                     try {
-                        System.out.println("trying...");
+                        System.out.print("trying...");
                         ArrayList<String> a = ItemListParse(items);
                         System.out.println("items : " + a.size());
                         itemListActivity.putStringArrayListExtra("data", a);
@@ -307,6 +313,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel(labelNr);
+                Log.d("edtRecieveDate",edtRecieveDate.getText().toString());
 
             }
 
@@ -502,6 +509,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
     private RegistreringsDTO getDataAndFiles(int itemNr) {
+
 
         RegistreringsDTO registrering;
 
