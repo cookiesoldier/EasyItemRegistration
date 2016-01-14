@@ -51,6 +51,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     public static final int IMAGE_CAPTURE = 42;
     public static final int IMAGE_SELECT = 43;
+    public static final int AUDIO_CAPTURE = 44;
+    public static final int AUDIO_SELECT = 45;
+    public static final int MEDIA_TYPE_AUDIO = 3;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
@@ -92,6 +95,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     List<Uri> selectedImages = new ArrayList<>();
     //De viste billeder
     List<Bitmap> shownImages = new ArrayList<>();
+    //De valgt optagelser
+    List<Uri> selectedAudio = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +112,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
         btnSearch.setOnClickListener(this);
+
+        btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
+        btnRecorder.setOnClickListener(this);
 
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
         photoThumb2 = (ImageView) findViewById(R.id.photoThumb2);
@@ -135,12 +143,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
+       /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+        }
+           public void onClick(View v) {
                 startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
             }
-        });
+        }); */
     }
 
     @Override
@@ -179,6 +188,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
         if (v == edtDatingTo) {
             getSetDate(3);
+        }
+
+        if (v == btnRecorder) {
+            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+            startActivityForResult(intent, AUDIO_CAPTURE);
+            fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
         }
 
         if (v == btnGalleryPhoto) {
@@ -346,6 +361,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (resultCode != Activity.RESULT_OK) return;
 
         switch (requestCode) {
+            case AUDIO_CAPTURE:
+                selectedAudio.add(fileUri);
+                Log.d("Audiorecording: ", data.getExtras().toString());
+                Log.d("Audioshit ", fileUri.toString());
+                break;
+
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri);
                 shownImages.clear();
@@ -457,6 +478,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "EIR.Media");
+        File audioStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MUSIC), "EIR.Media");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -477,6 +500,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         } else if (type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_" + timeStamp + ".mp4");
+        } else if (type == MEDIA_TYPE_AUDIO) {
+            mediaFile = new File(audioStorageDir.getPath() + File.separator +
+                    "aud_" + timeStamp + ".3gp");
         } else {
             return null;
         }
@@ -498,7 +524,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb2.setImageDrawable(null);
         photoThumb3.setImageDrawable(null);
         shownImages.clear();
-        selectedImages.clear();
+        selectedImages.clear()
+        selectedAudio.clear();
     }
 
     private RegistreringsDTO getDataAndFiles(int itemNr) {
@@ -514,7 +541,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    selectedImages);
+                    selectedImages, selectedAudio);
         } else {
             registrering = new RegistreringsDTO(
                     Integer.toString(itemNr),
@@ -526,7 +553,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    selectedImages);
+                    selectedImages, selectedAudio);
         }
 
 
