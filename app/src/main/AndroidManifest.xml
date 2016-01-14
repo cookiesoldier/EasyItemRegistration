@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".FrontPageActivity"
-            android:label="G32 EasyItemRegistration" >
+            android:label="g32 EasyItemRegistration" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
