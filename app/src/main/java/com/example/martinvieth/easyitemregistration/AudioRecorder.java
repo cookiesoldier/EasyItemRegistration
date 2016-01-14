@@ -1,9 +1,7 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -19,13 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
 
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 //import static com.example.martinvieth.easyitemregistration.AudioRecorder.getOutputMediaFile;
 
@@ -48,16 +43,13 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     String uniqueName = String.valueOf(System.currentTimeMillis());
     //String uniqueName = String.valueOf(editAudioTitel.getText());
     MediaRecorder mRecorder = null;
-    MediaPlayer   mPlayer = null;
+    MediaPlayer mPlayer = null;
     private Uri fileUri;
     private File root;
     private ArrayList<File> audioList = new ArrayList<File>();
 
     //Eventuel mulighed for at pause nuværende optagelse, således
     //der kan optages ét langt lydklip, i stedet for flere små
-
-    //Lav en liste over tidligere optagelser nedenunder knapperne,
-    //så man kan se de forrige optagelser og eventuelt mulighed for rename-option
 
     public ArrayList<File> getfile(File dir) {
         File listFile[] = dir.listFiles();
@@ -73,53 +65,67 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         return audioList;
     }
 
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
     @Override
     public void onClick(View v) {
-
-        if (v == btnStartRecord){
+        if (v == btnStartRecord) {
             Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
             startRecording();
             imgView.setImageResource(R.mipmap.record);
             getfile(root);
         }
 
-        if (v == btnStopRecord){
+        if (v == btnStopRecord) {
             Toast.makeText(getApplicationContext(), "Recording was successful", Toast.LENGTH_LONG).show();
             stopRecording();
             imgView.setImageResource(R.mipmap.play);
         }
 
-        if (v == btnStop){
+        if (v == btnStop) {
             stopPlaying();
             imgView.setImageResource(R.mipmap.play);
         }
 
-        if (v == btnSave){
-
+        if (v == btnSave) {
             //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
         }
 
-        if (v == btnPlay){
-            if (btnPlay.getText() == "Play"){
-                imgView.setImageResource(R.mipmap.pause);
-                startPlaying();
-                btnPlay.setText("Pause");
-            }
+        if (v == btnPlay) {
+            boolean playing = true;
+            onPlay(playing);
 
-            else if (btnPlay.getText() == "Pause") {
+            if (playing) {
+                btnPlay.setText("Pause");
+            } else {
+                btnPlay.setText("Play");
+            }
+            playing = !playing;
+            imgView.setImageResource(R.mipmap.pause);
+          /*  startPlaying();
+            btnPlay.setText("Pause");
+
+            if (btnPlay.getText() == "Pause") {
                 imgView.setImageResource(R.mipmap.play);
                 mPlayer.pause();
-                btnPlay.setText("Resume");
+                btnPlay.setText("Play");
             }
 
-            else if (btnPlay.getText() == "Resume"){
+            else {
                 imgView.setImageResource(R.mipmap.pause);
                 mPlayer.start();
                 btnPlay.setText("Pause");
             }
+        }*/
         }
-
     }
+
 
     @Override
     public void onCreate(Bundle icicle) {
