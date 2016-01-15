@@ -29,7 +29,7 @@ public class ItemListActivity extends Activity {
 
         ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
         final ListView listView = (ListView) findViewById(R.id.lVItems);
-        listView.setAdapter(new customListAdapter(this, itemsParsed));
+        listView.setAdapter(new CustomListAdapter2(this, itemsParsed));
 
             System.out.println("listens længde: " + itemsParsed.size());
 

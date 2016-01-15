@@ -61,7 +61,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
     //Context c = getApplicationContext();
-    final databaseDAO dataDAO = new databaseDAO(this);
+    final DatabaseDAO2 dataDAO = new DatabaseDAO2(this);
     private Uri fileUri;
 
     ImageButton btnMenu;
