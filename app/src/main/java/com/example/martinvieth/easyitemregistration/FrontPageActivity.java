@@ -172,7 +172,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (label == 1) {
             edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
-            Log.d("editRecieveDate",edtRecieveDate.getText().toString());
+            Log.d("editRecieveDate", edtRecieveDate.getText().toString());
         }
         if (label == 2) {
             edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
@@ -224,8 +224,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-
-
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
@@ -236,67 +234,84 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                             } else {
                                 return "failed";
                             }
-            if (edtItemHeadline.getText().length() != 0) {
-                new AsyncTask() {
-                    @Override
-                    protected Object doInBackground(Object... executeParametre) {
-                        try {
-                            if (itemNrDeterminer == -1) {
-                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                    return "succes";
-                                } else {
-                                    return "failed";
-                                }
 
+                        } else {
+
+                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                return "succes";
                             } else {
-
-                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                    return "succes";
-                                } else {
-                                    return "failed";
-                                }
+                                return "failed";
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-                        return "færdig!";  // <5>
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-
-                    @Override
-                    protected void onProgressUpdate(Object... progress) {
-
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object result) {
-                        //inform user item was added and delete the data and files so new can be added or if it failed
-                        if (result.equals("succes")) {
-                            deleteDataAndFiles();
-                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
-                        } else if (result.equals("failed")) {
-                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
-
-
-                        }
-                        itemNrDeterminer = -1;
-
-                    }
-                }.execute(100);
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
-            }
+                    return "færdig!";  // <5>
+                }
+            }.execute(100);
         }
+        if (edtItemHeadline.getText().length() != 0) {
+            new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object... executeParametre) {
+                    try {
+                        if (itemNrDeterminer == -1) {
+                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                return "succes";
+                            } else {
+                                return "failed";
+                            }
+
+                        } else {
+
+                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                return "succes";
+                            } else {
+                                return "failed";
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return "færdig!";  // <5>
+                }
+
+
+                @Override
+                protected void onProgressUpdate(Object... progress) {
+
+                }
+
+                @Override
+                protected void onPostExecute(Object result) {
+                    //inform user item was added and delete the data and files so new can be added or if it failed
+                    if (result.equals("succes")) {
+                        deleteDataAndFiles();
+                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                    } else if (result.equals("failed")) {
+                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
+                    }
+                    itemNrDeterminer = -1;
+
+                }
+            }.execute(100);
+        } else {
+            Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+        }
+
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
 
 
+        if (v == btnSearch)
 
-        if (v == btnSearch) {
+        {
             showLoadingDialog();
             new AsyncTask() {
                 String items;
+
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
                     try {
@@ -322,7 +337,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         ArrayList<String> a = ItemListParse(items);
                         System.out.println("items : " + a.size());
                         itemListActivity.putStringArrayListExtra("data", a);
-                        
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -345,7 +360,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel(labelNr);
-                Log.d("edtRecieveDate",edtRecieveDate.getText().toString());
+                Log.d("edtRecieveDate", edtRecieveDate.getText().toString());
 
             }
 
@@ -364,19 +379,19 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         Log.d("Parsing items -->", "Step1" + (items));
         //Vi prøver at gøre det med json objekter istedet.
         //først lægger vi string ind i et json object
-        final JSONArray jsonArrayData = new JSONArray(items);
-        System.out.println("ItemListParse(): jsonarray "+jsonArrayData.length());
-        JSONArray jsonArrayData = new JSONArray(items);
 
+
+        JSONArray jsonArrayData = new JSONArray(items);
+        System.out.println("ItemListParse(): jsonarray " + jsonArrayData.length());
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
             final JSONObject dataPoint = jsonArrayData.getJSONObject(i);
 
 
-                itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
+            itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
 
             // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
-           // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
+            // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
 
 
@@ -484,9 +499,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     JSONObject jsonImages = new JSONObject(jsonData.get("images").toString());
 
                     int i = 0;
-                    while(jsonImages.opt("image_"+Integer.toString(i))!= null){
+                    while (jsonImages.opt("image_" + Integer.toString(i)) != null) {
                         JSONObject per = new JSONObject(jsonImages.opt("image_" + Integer.toString(i)).toString());
-                        Log.d("test data url:",  per.get("href").toString());
+                        Log.d("test data url:", per.get("href").toString());
                         selectedImages.add(per.get("href").toString());
 
                         i++;
@@ -569,7 +584,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb3.setImageDrawable(null);
         itemNrDeterminer = -1;
         shownImages.clear();
-        selectedImages.clear()
+        selectedImages.clear();
         selectedAudio.clear();
     }
 
@@ -613,25 +628,26 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         Log.d("updateThump images: ", Integer.toString(selectedImages.size()));
 
         if (selectedImages.size() == 1) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
 
             //photoThumb1.setImageBitmap(shownImages.get(0));
         } else if (selectedImages.size() == 2) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
 
             //photoThumb1.setImageBitmap(shownImages.get(0));
-           // photoThumb2.setImageBitmap(shownImages.get(1));
+            // photoThumb2.setImageBitmap(shownImages.get(1));
         } else if (selectedImages.size() >= 3) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb2);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size()-3)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb3);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb2);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 3)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb3);
             //photoThumb1.setImageBitmap(shownImages.get(0));
-           // photoThumb2.setImageBitmap(shownImages.get(1));
-           // photoThumb3.setImageBitmap(shownImages.get(2));
+            // photoThumb2.setImageBitmap(shownImages.get(1));
+            // photoThumb3.setImageBitmap(shownImages.get(2));
         }
-        
+
     }
+
     public void showLoadingDialog() {
 
         if (progress == null) {
