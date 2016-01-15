@@ -2,7 +2,11 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -25,8 +29,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,10 +61,10 @@ public class databaseDAO {
 
         //The url is the message sent to the server, we add  /items to complete the message to the server.
         //And the message is sent in the following lines.
-        getItem(19);
         url = new URL(urlString + "/items" + protString);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+        InputStream in = null;
+        String responses = null;
         try {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
@@ -69,12 +75,14 @@ public class databaseDAO {
             Log.d("Server response ----->", "The response is: " + response);
 
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            return readStream(in);
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            responses = readStream(in);
+            urlConnection.disconnect();
 
         } finally {
-            urlConnection.disconnect();
+            //
+            return responses;
+
         }
 
 
@@ -84,7 +92,8 @@ public class databaseDAO {
 
         url = new URL(urlString + "/items/" + Integer.toString(itemNr) + protString);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+        InputStream in = null;
+        String responses = null;
 
         try {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
@@ -98,12 +107,14 @@ public class databaseDAO {
             Log.d("Server response ----->", "The response is: " + response);
 
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            return readStream(in);
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            responses = readStream(in);
+            urlConnection.disconnect();
 
         } finally {
-            urlConnection.disconnect();
+
+
+            return responses;
         }
 
     }
@@ -163,14 +174,14 @@ public class databaseDAO {
             itemID = dataPoint.get("itemid").toString();
 
 
-            Log.d("asd",serverResponse);
+            Log.d("asd", serverResponse);
 
 
         } finally {
             urlConnection.disconnect();
             Log.d("Server response ----->", "The response is: " + response);
             if (response == 200 || response == 201) {
-               sendPicSound(new RegistreringsDTO(itemID,data));
+                sendPicSound(new RegistreringsDTO(itemID, data));
                 return true;
             } else {
                 return false;
@@ -293,7 +304,6 @@ public class databaseDAO {
     }
 
     /**
-     *
      * @param dataDTO the dto in which the images and sound files is contained
      * @return if it succeded in sending the last image to server
      * @throws IOException
@@ -302,7 +312,7 @@ public class databaseDAO {
         String[] okTypes = {"image/png", "image/jpg", "image/jpeg",
                 "audio/mp4", "audio/3gp", "audio/3GPP", "audio/aac", "audio/mp3"};
         int response = 0;
-        if(dataDTO.getItemNr()== null){
+        if (dataDTO.getItemNr() == null) {
             return false;
 
         }
@@ -375,21 +385,35 @@ public class databaseDAO {
         }
     }
 
-    private String getImage(String urlPath) throws IOException {
+    public String getImage(String urlPath) throws IOException {
 
+        //Først Finder vi et navn til filen som vi vil gemme, vi bruger timestamp til at lave et tidspunk
 
+        String fileName = "" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        Log.d("getImage fileName--->", fileName);
+        //vi finder lige ud af typen af filen
+
+        String fileType = urlPath.substring(urlPath.lastIndexOf("."));
+       // String fileType = urlPath.toString();
+        Log.d("getImage fileType--->", fileType);
 
         File fileToSave = null;
-        try{
+
+
+
+        try {
+            Log.d("UrlPath---->", urlPath);
             URL urls = new URL(urlPath);
             URLConnection conn = urls.openConnection();
 
             InputStream is = conn.getInputStream();
+
             BufferedInputStream input = new BufferedInputStream(is);
+            //Find den path til mappe vi gerne vil gemme billedet i
+            //fileToSave = new File();
 
-           // fileToSave = LocalMediaStorage.getOutputMediaFile(urlPath.substring(urlPath.lastIndexOf("/")), type);
 
-            if(fileToSave == null)
+            if (fileToSave == null)
                 return null;
 
             OutputStream output = new FileOutputStream(fileToSave);
@@ -405,12 +429,11 @@ public class databaseDAO {
             input.close();
             output.close();
 
-        } catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-
-
-
+        return "";
     }
+
 }

@@ -2,21 +2,38 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
-public class ItemListActivity extends Activity   {
+public class ItemListActivity extends Activity {
 
 
     ListView itemsListing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,44 +42,41 @@ public class ItemListActivity extends Activity   {
 
         Intent intentExtras = getIntent();
 
-        itemsListing = (ListView) findViewById(R.id.lVItems);
+        //itemsListing = (ListView) findViewById(R.id.lVItems);
+
+        ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
+        final ListView listView = (ListView) findViewById(R.id.lVItems);
+        listView.setAdapter(new CustomListAdapter(this, itemsParsed));
+
+            System.out.println("listens længde: " + itemsParsed.size());
+
+            // Assign adapter to ListView
 
 
-        ArrayList<String> itemsParsed =intentExtras.getStringArrayListExtra("data");
+            listView.setOnItemClickListener(new OnItemClickListener() {
 
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                    // ListView Clicked item index
+                    int itemPosition = position;
 
-        System.out.println("listens længde: "+ itemsParsed.size());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, itemsParsed);
+                    // ListView Clicked item value
+                    String itemValue = (String) listView.getItemAtPosition(position);
 
-        // Assign adapter to ListView
-        itemsListing.setAdapter(adapter);
+                    // Show Alert
+                    Toast.makeText(getApplicationContext(),
+                            "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
+                            .show();
+                    Intent intent = new Intent();
+                    intent.putExtra("seletedItem", itemValue);
+                    setResult(RESULT_OK, intent);
 
-        itemsListing.setOnItemClickListener(new OnItemClickListener() {
+                    finish();
+                }
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            });
 
-                // ListView Clicked item index
-                int itemPosition     = position;
-
-                // ListView Clicked item value
-                String  itemValue    = (String) itemsListing.getItemAtPosition(position);
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                        .show();
-                Intent intent = new Intent();
-                intent.putExtra("seletedItem",itemValue);
-                setResult(RESULT_OK, intent);
-
-                finish();
-            }
-
-        });
     }
-
-
-
 }
+

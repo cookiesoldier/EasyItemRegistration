@@ -207,6 +207,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
+
+
             new AsyncTask() {
                 @Override
                 protected Object doInBackground(Object... executeParametre) {
@@ -330,12 +332,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         Log.d("Parsing items -->", "Step1" + (items));
         //Vi prøver at gøre det med json objekter istedet.
         //først lægger vi string ind i et json object
-        JSONArray jsonArrayData = new JSONArray(items);
+        final JSONArray jsonArrayData = new JSONArray(items);
         System.out.println("ItemListParse(): jsonarray "+jsonArrayData.length());
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
-            JSONObject dataPoint = jsonArrayData.getJSONObject(i);
-            itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
+            final JSONObject dataPoint = jsonArrayData.getJSONObject(i);
+
+
+                itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
+
             // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
            // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
