@@ -233,14 +233,12 @@
                 android:layout_weight="1">
 
                 <ImageButton
-                    android:id="@+id/imageButtonRecorder"
                     android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:background="#1277e3"
-                    android:clickable="true"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButtonRecorder"
                     android:src="@mipmap/microphoneicon"
-                    android:layout_weight="1" />
-
+                    android:background="#1277e3"
+                    android:layout_weight="0.5" />
             </LinearLayout>
 
 

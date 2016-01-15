@@ -16,7 +16,7 @@ public class RegistreringsDTO {
 
 
 
-  private String itemNr;
+    private String itemNr;
     private String itemHeadline;
     private String beskrivelse;
 
@@ -30,6 +30,8 @@ public class RegistreringsDTO {
     private String geoArea;
 
     private List<String> images;
+    private List<Uri> audio;
+
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse){
         this.itemHeadline = itemHeadline;
@@ -50,7 +52,7 @@ public class RegistreringsDTO {
      */
     public RegistreringsDTO(String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<String> images){
+                            String refProducer, String geoArea, List<String> images, List<Uri> audio){
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
         this.recieveDate = recieveDate;
@@ -60,6 +62,8 @@ public class RegistreringsDTO {
         this.refProducer = refProducer;
         this.geoArea = geoArea;
         this.images = images;
+        this.audio = audio;
+
     }
 
     /**
@@ -77,7 +81,7 @@ public class RegistreringsDTO {
      */
     public RegistreringsDTO(String itemNr, String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<String> images){
+                            String refProducer, String geoArea, List<String> images, List<Uri> audio){
         this.itemNr = itemNr;
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
@@ -88,6 +92,8 @@ public class RegistreringsDTO {
         this.refProducer = refProducer;
         this.geoArea = geoArea;
         this.images = images;
+        this.audio = audio;
+
     }
     public RegistreringsDTO(String itemNr,RegistreringsDTO data){
         this.itemNr = itemNr;
@@ -100,8 +106,7 @@ public class RegistreringsDTO {
         this.refProducer = data.getRefProducer();
         this.geoArea = data.getGeoArea();
         this.images = data.getImages();
-
-
+        this.audio = data.getAudio();
     }
 
 
@@ -143,5 +148,7 @@ public class RegistreringsDTO {
     public List<String> getImages() {
         return images;
     }
+
+    public List<Uri> getAudio() { return audio; }
 
 }

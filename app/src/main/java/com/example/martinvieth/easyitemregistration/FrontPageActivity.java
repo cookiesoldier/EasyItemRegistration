@@ -54,6 +54,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     public static final int IMAGE_CAPTURE = 42;
     public static final int IMAGE_SELECT = 43;
+    public static final int AUDIO_CAPTURE = 44;
+    public static final int AUDIO_SELECT = 45;
+    public static final int MEDIA_TYPE_AUDIO = 3;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int ITEMLIST_CHOSEN = 100;
@@ -88,11 +91,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     TextView textView7;
 
-
-
-    //String data;
-    //private String file = "My Data";
-
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
 
@@ -101,6 +99,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //De viste billeder fra galleri eller
     List<Bitmap> shownImages = new ArrayList<>();
     //
+    //De valgt optagelser
+    List<Uri> selectedAudio = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,14 +117,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
         btnSearch.setOnClickListener(this);
 
+        btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
+        btnRecorder.setOnClickListener(this);
+
         photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
         photoThumb2 = (ImageView) findViewById(R.id.photoThumb2);
         photoThumb3 = (ImageView) findViewById(R.id.photoThumb3);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
-
-        //textView7 = (TextView)findViewById(R.id.textView7);
-
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
@@ -147,12 +147,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
 
-        findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
+       /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+        }
+           public void onClick(View v) {
                 startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
             }
-        });
+        }); */
     }
 
     @Override
@@ -166,17 +167,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private void updateLabel(int label) {
 
-        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        String myFormat = "yyyy/MM/dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
         if (label == 1) {
             edtRecieveDate.setText(sdf.format(myCalendar.getTime()));
+            Log.d("editRecieveDate",edtRecieveDate.getText().toString());
         }
         if (label == 2) {
             edtDatingFrom.setText(sdf.format(myCalendar.getTime()));
+            Log.d("editDatingFrom", edtDatingFrom.getText().toString());
         }
         if (label == 3) {
             edtDatingTo.setText(sdf.format(myCalendar.getTime()));
+            Log.d("edtDatingTo", edtDatingTo.getText().toString());
         }
     }
 
@@ -186,12 +190,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (v == edtRecieveDate) {
             getSetDate(1);
 
+            Log.d("edtRecieveData", edtRecieveDate.getText().toString());
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
+            Log.d("edtRecieveData", edtDatingFrom.getText().toString());
         }
         if (v == edtDatingTo) {
             getSetDate(3);
+            Log.d("edtRecieveData", edtDatingTo.getText().toString());
+        }
+
+        if (v == btnRecorder) {
+            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+            startActivityForResult(intent, AUDIO_CAPTURE);
+            fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
         }
 
         if (v == btnGalleryPhoto) {
@@ -223,41 +236,57 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                             } else {
                                 return "failed";
                             }
+            if (edtItemHeadline.getText().length() != 0) {
+                new AsyncTask() {
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            if (itemNrDeterminer == -1) {
+                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
 
-                        } else {
-
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
                             } else {
-                                return "failed";
+
+                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
 
-                @Override
-                protected void onProgressUpdate(Object... progress) {
 
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-                    //inform user item was added and delete the data and files so new can be added or if it failed
-                    if (result.equals("succes")) {
-                        deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
-                    } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
-
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
 
                     }
-                    itemNrDeterminer = -1;
 
-                }
-            }.execute(100);
+                    @Override
+                    protected void onPostExecute(Object result) {
+                        //inform user item was added and delete the data and files so new can be added or if it failed
+                        if (result.equals("succes")) {
+                            deleteDataAndFiles();
+                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        } else if (result.equals("failed")) {
+                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
+                        }
+                        itemNrDeterminer = -1;
+
+                    }
+                }.execute(100);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+            }
         }
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
@@ -273,8 +302,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     try {
                         //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
                         items = dataDAO.itemList();
-
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -283,21 +310,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                 @Override
                 protected void onProgressUpdate(Object... progress) {
+
                 }
 
                 @Override
                 protected void onPostExecute(Object result) {
-                    System.out.println("onpost");
+
                     Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
                     try {
-                        System.out.println("trying...");
+                        System.out.print("trying...");
                         ArrayList<String> a = ItemListParse(items);
                         System.out.println("items : " + a.size());
                         itemListActivity.putStringArrayListExtra("data", a);
                         
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        System.out.println("fejl i parsing");
                     }
                     startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
                 }
@@ -318,6 +345,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateLabel(labelNr);
+                Log.d("edtRecieveDate",edtRecieveDate.getText().toString());
 
             }
 
@@ -338,6 +366,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         //først lægger vi string ind i et json object
         final JSONArray jsonArrayData = new JSONArray(items);
         System.out.println("ItemListParse(): jsonarray "+jsonArrayData.length());
+        JSONArray jsonArrayData = new JSONArray(items);
+
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
             final JSONObject dataPoint = jsonArrayData.getJSONObject(i);
@@ -360,6 +390,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (resultCode != Activity.RESULT_OK) return;
 
         switch (requestCode) {
+            case AUDIO_CAPTURE:
+                selectedAudio.add(fileUri);
+                Log.d("Audiorecording: ", data.getExtras().toString());
+                Log.d("Audioshit ", fileUri.toString());
+                break;
+
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri.toString());
                 shownImages.clear();
@@ -486,6 +522,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), "EIR.Media");
+        File audioStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MUSIC), "EIR.Media");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -506,6 +544,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         } else if (type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_" + timeStamp + ".mp4");
+        } else if (type == MEDIA_TYPE_AUDIO) {
+            mediaFile = new File(audioStorageDir.getPath() + File.separator +
+                    "aud_" + timeStamp + ".3gp");
         } else {
             return null;
         }
@@ -528,10 +569,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         photoThumb3.setImageDrawable(null);
         itemNrDeterminer = -1;
         shownImages.clear();
-        selectedImages.clear();
+        selectedImages.clear()
+        selectedAudio.clear();
     }
 
     private RegistreringsDTO getDataAndFiles(int itemNr) {
+
 
         RegistreringsDTO registrering;
 
@@ -544,7 +587,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    selectedImages);
+                    selectedImages, selectedAudio);
         } else {
             registrering = new RegistreringsDTO(
                     Integer.toString(itemNr),
@@ -556,7 +599,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.getText().toString(),
                     edtTextRefProducer.getText().toString(),
                     edtGeoArea.getText().toString(),
-                    selectedImages);
+                    selectedImages, selectedAudio);
         }
 
 
