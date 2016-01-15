@@ -29,7 +29,7 @@ public class RegistreringsDTO {
     //er en small int??
     private String geoArea;
 
-    private List<Uri> images;
+    private List<String> images;
 
     public RegistreringsDTO(String itemHeadline, String beskrivelse){
         this.itemHeadline = itemHeadline;
@@ -50,7 +50,7 @@ public class RegistreringsDTO {
      */
     public RegistreringsDTO(String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<Uri> images){
+                            String refProducer, String geoArea, List<String> images){
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
         this.recieveDate = recieveDate;
@@ -77,7 +77,7 @@ public class RegistreringsDTO {
      */
     public RegistreringsDTO(String itemNr, String itemHeadline, String beskrivelse, String recieveDate,
                             String datingFrom, String datingTo, String refDonator,
-                            String refProducer, String geoArea, List<Uri> images){
+                            String refProducer, String geoArea, List<String> images){
         this.itemNr = itemNr;
         this.itemHeadline = itemHeadline;
         this.beskrivelse = beskrivelse;
@@ -140,7 +140,7 @@ public class RegistreringsDTO {
         return geoArea;
     }
 
-    public List<Uri> getImages() {
+    public List<String> getImages() {
         return images;
     }
 

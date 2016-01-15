@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,10 +96,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
 
-    //De valgte billeder
-    List<Uri> selectedImages = new ArrayList<>();
-    //De viste billeder
+    //De valgte billeder fra enten camera eller galleri
+    List<String> selectedImages = new ArrayList<>();
+    //De viste billeder fra galleri eller
     List<Bitmap> shownImages = new ArrayList<>();
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -357,9 +361,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         switch (requestCode) {
             case IMAGE_CAPTURE:
-                selectedImages.add(fileUri);
+                selectedImages.add(fileUri.toString());
                 shownImages.clear();
-                bitMapAdd();
+                updatePhotoThump();
                 break;
 
             case IMAGE_SELECT:
@@ -372,14 +376,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         Uri uri = item.getUri();
                         //Indsæt uri i liste
                         Log.d("URI check ----->", uri.toString());
-                        selectedImages.add(uri);
+                        selectedImages.add(uri.toString());
                     }
                 } else {
                     Log.d("URI check -----> ", data.getData().toString());
-                    selectedImages.add(data.getData());
+                    selectedImages.add(data.getData().toString());
                 }
                 shownImages.clear();
-                bitMapAdd();
+                updatePhotoThump();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -440,11 +444,25 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtTextRefProducer.setText(jsonData.get("producer").toString());
                     edtGeoArea.setText(jsonData.get("postnummer").toString());
                     shownImages.clear();
+
+                    JSONObject jsonImages = new JSONObject(jsonData.get("images").toString());
+
+                    int i = 0;
+                    while(jsonImages.opt("image_"+Integer.toString(i))!= null){
+                        JSONObject per = new JSONObject(jsonImages.opt("image_" + Integer.toString(i)).toString());
+                        Log.d("test data url:",  per.get("href").toString());
+                        selectedImages.add(per.get("href").toString());
+
+                        i++;
+                    }
+
+                    updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }.execute(100);
+
 
     }
 
@@ -546,50 +564,28 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
     /**
-     * Denne metode lægger de 3 først billeder URI's fra selectedimages ind i showimages som bitmaps
-     */
-    public void bitMapAdd() {
-        AssetFileDescriptor fileDS = null;
-        int runs = 3;
-        if (selectedImages.size() < 3) {
-            runs = selectedImages.size();
-        }
-        Log.d("Nr of runs:  ", Integer.toString(runs));
-        for (int x = 0; x < runs; x++) {
-            try {
-                /*
-                tjek bitmaps størrelse, derefter downsize den til noget vi er sikre på at arbejde med.
-                InputStream input = cr.openInputStream(url);
-                Bitmap bitmap = BitmapFactory.decodeStream(input);
-                input.close();
-                */
-                Log.d("Pree add selected", selectedImages.get(0).toString());
-                shownImages.add(MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImages.get(selectedImages.size() - 1 - x)));
-                
-            } catch (IOException e) {
-                Log.d("Error", "Could not find image file in storage.");
-                e.printStackTrace();
-            }
-        }
-        Log.d("size of runs", Integer.toString(runs));
-        updatePhotoThump();
-    }
-
-    /**
      * Denne metode tager billederne fra shownimages og lægger dem ind i de 3 photothump
      */
     public void updatePhotoThump() {
-        Log.d("updateThump images: ", Integer.toString(shownImages.size()));
+        Log.d("updateThump images: ", Integer.toString(selectedImages.size()));
 
-        if (shownImages.size() == 1) {
-            photoThumb1.setImageBitmap(shownImages.get(0));
-        } else if (shownImages.size() == 2) {
-            photoThumb1.setImageBitmap(shownImages.get(0));
-            photoThumb2.setImageBitmap(shownImages.get(1));
-        } else if (shownImages.size() >= 3) {
-            photoThumb1.setImageBitmap(shownImages.get(0));
-            photoThumb2.setImageBitmap(shownImages.get(1));
-            photoThumb3.setImageBitmap(shownImages.get(2));
+        if (selectedImages.size() == 1) {
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+
+            //photoThumb1.setImageBitmap(shownImages.get(0));
+        } else if (selectedImages.size() == 2) {
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+
+            //photoThumb1.setImageBitmap(shownImages.get(0));
+           // photoThumb2.setImageBitmap(shownImages.get(1));
+        } else if (selectedImages.size() >= 3) {
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb2);
+            Picasso.with(this).load(selectedImages.get(selectedImages.size()-3)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb3);
+            //photoThumb1.setImageBitmap(shownImages.get(0));
+           // photoThumb2.setImageBitmap(shownImages.get(1));
+           // photoThumb3.setImageBitmap(shownImages.get(2));
         }
         
     }

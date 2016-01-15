@@ -2,9 +2,6 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -317,19 +314,22 @@ public class databaseDAO {
 
         }
         try {
-            for (Uri uri : dataDTO.getImages()) {
-
-
+/////// check for om det er en uri før du prøver at sende den, kommer nok til at give fejl men det er nok derfor!
+            for (String uri : dataDTO.getImages()) {
+                Log.d("SendPicSoundTest--->",uri);
+                if(uri.contains("http://")){
+                    continue;
+                }
                 //Så checker vi hvilken type filen er.
                 ContentResolver cR = frontPageActContext.getContentResolver();
-                String type = cR.getType(uri);
+                String type = cR.getType(Uri.parse(uri));
                 //Vi check er om filens type er en af dem som databasen kan bruge.
                 if (!Arrays.asList(okTypes).contains(type)) {
                     Log.d("Error:FileType: ", type);
                     return false;
                 }
                 //Gem billedet i byteArray
-                InputStream fileInputStream = cR.openInputStream(uri);
+                InputStream fileInputStream = cR.openInputStream(Uri.parse(uri));
                 byte[] bFile = new byte[fileInputStream.available()];
 
                 try {
