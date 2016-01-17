@@ -91,8 +91,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private ProgressDialog progress;
 
-
-    TextView textView7;
+    
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
@@ -308,9 +307,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     //inform user item was added and delete the data and files so new can be added or if it failed
                     if (result.equals("succes")) {
                         deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Registration Saved", Toast.LENGTH_LONG).show();
                     } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Failed to save registration", Toast.LENGTH_LONG).show();
 
 
                     }
