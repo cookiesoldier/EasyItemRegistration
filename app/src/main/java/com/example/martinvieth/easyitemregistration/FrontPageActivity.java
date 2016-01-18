@@ -65,15 +65,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //Context c = getApplicationContext();
     final DatabaseDAO2 dataDAO = new DatabaseDAO2(this);
     private Uri fileUri;
-
+    Calendar myCalendar = Calendar.getInstance();
     ImageButton btnSearch;
 
     ImageButton btnRecorder;
     ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
-
-
 
     EditText edtItemHeadline;
     EditText edtBeskrivelse;
@@ -102,14 +100,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
-//Burde gøre så skærmen ikke kan rotere
+
+        //Burde gøre så skærmen ikke kan rotere
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
-
-
-
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
@@ -146,6 +142,46 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
+        EIRapp.setSelectedImages(selectedImages);
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+        dismissLoadingDialog();
+
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        if(EIRapp.getSelectedImages() != null && EIRapp.getSavedData() != null) {
+            selectedImages = EIRapp.getSelectedImages();
+            selectedImagesShow();
+            RegistreringsDTO dataDTO = EIRapp.getSavedData();
+            updateFieldsOnResume(dataDTO);
+        }
+
+    }
+
+    private void updateFieldsOnResume(RegistreringsDTO dataDTO) {
+        if(dataDTO.getItemNr() != null){
+            itemNrDeterminer = Integer.parseInt(dataDTO.getItemNr());
+        }else{
+            itemNrDeterminer = -1;
+        }
+        edtItemHeadline.setText(dataDTO.getItemHeadline());
+        edtBeskrivelse.setText(dataDTO.getBeskrivelse());
+        edtRecieveDate.setText(dataDTO.getRecieveDate());
+        edtDatingFrom.setText(dataDTO.getDatingFrom());
+        edtDatingTo.setText(dataDTO.getDatingTo());
+        edtRefDonator.setText(dataDTO.getRefDonator());
+        edtTextRefProducer.setText(dataDTO.getRefProducer());
+        edtGeoArea.setText(dataDTO.getGeoArea());
+    }
+
 
     public void selectedImagesShow(){
         myGallery.removeAllViews();
@@ -169,7 +205,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-    Calendar myCalendar = Calendar.getInstance();
+
 
     private void updateLabel(int label) {
 
@@ -617,8 +653,5 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
-    protected void onResume() {
-        dismissLoadingDialog();
-        super.onResume();
-    }
+
 }

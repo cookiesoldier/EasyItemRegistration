@@ -13,10 +13,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".EIRApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".FrontPageActivity"
             android:label="g32 EasyItemRegistration" >
