@@ -2,6 +2,7 @@ package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -22,7 +23,7 @@ public class ItemListActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_item_list);
-
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Intent intentExtras = getIntent();
 
         //itemsListing = (ListView) findViewById(R.id.lVItems);

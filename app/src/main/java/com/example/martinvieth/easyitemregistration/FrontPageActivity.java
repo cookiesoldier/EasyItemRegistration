@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -115,8 +116,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
 
 
-
-
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
 
@@ -152,7 +151,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
 
-        myGallery = (LinearLayout)findViewById(R.id.mygallery);
+        myGallery = (LinearLayout) findViewById(R.id.mygallery);
        /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
         }
@@ -163,20 +162,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
-    public void selectedImagesShow(){
-
-        for(String paths: selectedImages){
-            LinearLayout layout = new LinearLayout(getApplicationContext());
-            layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
-            ImageView imageView = new ImageView(getApplicationContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(220, 220));
-            //imageView.getLayoutParams().width = 120;
-            Picasso.with(this).load(paths).placeholder(R.drawable.ic_placeholder).fit().into(imageView);
-            layout.addView(imageView);
-            myGallery.addView(layout);
-
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu); // standard menuer
@@ -211,15 +196,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (v == edtRecieveDate) {
             getSetDate(1);
 
-            Log.d("edtRecieveData", edtRecieveDate.getText().toString());
+            // Log.d("edtRecieveData", edtRecieveDate.getText().toString());
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
-            Log.d("edtRecieveData", edtDatingFrom.getText().toString());
+            // Log.d("edtRecieveData", edtDatingFrom.getText().toString());
         }
         if (v == edtDatingTo) {
             getSetDate(3);
-            Log.d("edtRecieveData", edtDatingTo.getText().toString());
+            // Log.d("edtRecieveData", edtDatingTo.getText().toString());
         }
 
         if (v == btnRecorder) {
@@ -245,90 +230,64 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        if (itemNrDeterminer == -1) {
-                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
 
-                        } else {
+            if (edtItemHeadline.getText().length() > 0) {
+                new AsyncTask() {
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            if (itemNrDeterminer == -1) {
+                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
 
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
                             } else {
-                                return "failed";
+
+                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
-            }.execute(100);
-        }
-        if (edtItemHeadline.getText().length() != 0) {
-            new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        if (itemNrDeterminer == -1) {
-                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
 
-                        } else {
 
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object result) {
+                        //inform user item was added and delete the data and files so new can be added or if it failed
+                        if (result.equals("succes")) {
+                            deleteDataAndFiles();
+                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        } else if (result.equals("failed")) {
+                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return "færdig!";  // <5>
-                }
-
-
-                @Override
-                protected void onProgressUpdate(Object... progress) {
-
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-                    //inform user item was added and delete the data and files so new can be added or if it failed
-                    if (result.equals("succes")) {
-                        deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
-                    } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
-
+                        itemNrDeterminer = -1;
 
                     }
-                    itemNrDeterminer = -1;
-
-                }
-            }.execute(100);
-        } else {
-            Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+                }.execute(100);
+            } else {
+                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+            }
         }
 
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
 
 
-        if (v == btnSearch)
-
-        {
+        if (v == btnSearch) {
             showLoadingDialog();
             new AsyncTask() {
                 String items;
@@ -428,34 +387,43 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         switch (requestCode) {
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
+
                 Log.d("Audiorecording: ", data.getExtras().toString());
                 Log.d("Audioshit ", fileUri.toString());
                 break;
 
             case IMAGE_CAPTURE:
-                selectedImages.add(fileUri.toString());
-                shownImages.clear();
-                updatePhotoThump();
+                if(!(fileUri == null)){
+                    selectedImages.add(fileUri.toString());
+                }else{
+                    Log.d("Image Captured error",""+fileUri);
+                }
+
+                //selectedImagesShow();
+                //shownImages.clear();
+                //updatePhotoThump();
+                selectedImagesShow();
                 break;
 
             case IMAGE_SELECT:
                 String abc = data.toString();
-                Log.d("Pre multi img check-->", abc);
+                //Log.d("Pre multi img check-->", abc);
                 if (data.getClipData() != null) {
                     ClipData clip = data.getClipData();
                     for (int i = 0; i < clip.getItemCount(); i++) {
                         ClipData.Item item = clip.getItemAt(i);
                         Uri uri = item.getUri();
                         //Indsæt uri i liste
-                        Log.d("URI check ----->", uri.toString());
+                        // Log.d("URI check ----->", uri.toString());
                         selectedImages.add(uri.toString());
                     }
                 } else {
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData().toString());
                 }
-                shownImages.clear();
-                updatePhotoThump();
+                //shownImages.clear();
+                //updatePhotoThump();
+                selectedImagesShow();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -515,7 +483,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.setText(jsonData.get("donator").toString());
                     edtTextRefProducer.setText(jsonData.get("producer").toString());
                     edtGeoArea.setText(jsonData.get("postnummer").toString());
-                    shownImages.clear();
+                    //shownImages.clear();
 
                     JSONObject jsonImages = new JSONObject(jsonData.get("images").toString());
 
@@ -528,7 +496,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         i++;
                     }
                     selectedImagesShow();
-                    updatePhotoThump();
+                    //updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -691,5 +659,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     protected void onResume() {
         dismissLoadingDialog();
         super.onResume();
+    }
+
+    public void selectedImagesShow() {
+        myGallery.removeAllViews();
+        for (String paths : selectedImages) {
+            LinearLayout layout = new LinearLayout(getApplicationContext());
+            layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+            ImageView imageView = new ImageView(getApplicationContext());
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(220, 220));
+            //imageView.getLayoutParams().width = 120;
+            Picasso.with(this).load(paths).placeholder(R.drawable.ic_placeholder).fit().into(imageView);
+            layout.addView(imageView);
+            myGallery.addView(layout);
+
+        }
     }
 }
