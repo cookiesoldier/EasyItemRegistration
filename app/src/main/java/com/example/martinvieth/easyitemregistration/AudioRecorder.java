@@ -97,8 +97,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
 
         if (v == btnSave) {
-           
-
 
             //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             //Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath());
@@ -129,17 +127,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
                 btnPlay.setText("Pause");
             }
         }
-          /*boolean playing = true;
-            onPlay(playing);
-
-            if (playing) {
-                btnPlay.setText("Pause");
-                imgView.setImageResource(R.mipmap.play);
-            } else {
-                btnPlay.setText("Play");
-            }
-            playing = !playing;
-          */
     }
 
 
