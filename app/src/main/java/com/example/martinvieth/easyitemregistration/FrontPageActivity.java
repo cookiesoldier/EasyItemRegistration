@@ -44,10 +44,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -249,6 +251,17 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnAccept) {
             if (edtItemHeadline.getText().length() > 0) {
+                if(true){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+                    try {
+                        Calendar validDate = new GregorianCalendar();
+                        Date date = sdf.parse(edtDatingFrom.getText().toString());
+                        Date date1 = sdf.parse(edtDatingTo.getText().toString());
+                        Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
+                        Log.d(edtDatingTo.getText().toString(),Long.toString(date1.getTime()));
+                        //validDate.setTime(date);
+                        //validDate.setTime(date1);
+                        if (date.getTime() < date1.getTime()) {
                 new AsyncTask() {
                     @Override
                     protected Object doInBackground(Object... executeParametre) {
@@ -295,6 +308,18 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                     }
                 }.execute(100);
+
+                        } else {
+
+                        Toast.makeText(getApplicationContext(),"Dato Fejl", Toast.LENGTH_LONG).show();
+                        }
+                        //Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
             } else {
                 Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
             }
