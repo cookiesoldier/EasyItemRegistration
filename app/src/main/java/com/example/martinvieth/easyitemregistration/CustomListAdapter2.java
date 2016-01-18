@@ -45,6 +45,7 @@ public class CustomListAdapter2 extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.list_row_layout, null);
             holder = new ViewHolder();
@@ -61,6 +62,8 @@ public class CustomListAdapter2 extends BaseAdapter {
         if (!url.contains("null")) {
             //Log.d("nrHeadUrl data--->", url);
             Picasso.with(context).load(url).placeholder(R.drawable.ic_placeholder).fit().into(holder.imageView);
+        }else{
+            holder.imageView.setImageResource(R.drawable.ic_placeholder);
         }
 
 
