@@ -224,9 +224,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnRecorder) {
+
             Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
             startActivityForResult(intent, AUDIO_CAPTURE);
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
+
         }
 
         if (v == btnGalleryPhoto) {
@@ -283,9 +285,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         //inform user item was added and delete the data and files so new can be added or if it failed
                         if (result.equals("succes")) {
                             deleteDataAndFiles();
-                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
                         } else if (result.equals("failed")) {
-                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
 
 
                         }
@@ -294,7 +296,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     }
                 }.execute(100);
             } else {
-                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Overskrift mangler", Toast.LENGTH_LONG).show();
             }
         }
 

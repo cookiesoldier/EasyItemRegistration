@@ -79,14 +79,14 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == btnStartRecord) {
-            Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_SHORT).show();
             startRecording();
             imgView.setImageResource(R.mipmap.record);
             getfile(root);
         }
 
         if (v == btnStopRecord) {
-            Toast.makeText(getApplicationContext(), "Recording was successful", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Recording was successful", Toast.LENGTH_SHORT).show();
             stopRecording();
             imgView.setImageResource(R.mipmap.play);
         }
@@ -98,10 +98,10 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
 
         if (v == btnSave) {
 
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath());
-            intent.setDataAndType(uri, "*/*");
-            startActivityForResult(Intent.createChooser(intent, "Select Audiofiles"), 66);
+            //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            //Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath());
+            //intent.setDataAndType(uri, "*/*");
+            //startActivityForResult(Intent.createChooser(intent, "Select Audiofiles"), 66);
 
             //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
             //intent.setType("audio/*");
@@ -127,17 +127,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
                 btnPlay.setText("Pause");
             }
         }
-          /*boolean playing = true;
-            onPlay(playing);
-
-            if (playing) {
-                btnPlay.setText("Pause");
-                imgView.setImageResource(R.mipmap.play);
-            } else {
-                btnPlay.setText("Play");
-            }
-            playing = !playing;
-          */
     }
 
 
