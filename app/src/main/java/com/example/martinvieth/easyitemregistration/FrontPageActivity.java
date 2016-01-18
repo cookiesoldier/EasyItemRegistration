@@ -92,8 +92,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private ProgressDialog progress;
 
-
-    TextView textView7;
+    
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
@@ -162,6 +161,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
+    public void selectedImagesShow(){
+
+        for(String paths: selectedImages){
+            LinearLayout layout = new LinearLayout(getApplicationContext());
+            layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+            ImageView imageView = new ImageView(getApplicationContext());
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(220, 220));
+            //imageView.getLayoutParams().width = 120;
+            Picasso.with(this).load(paths).placeholder(R.drawable.ic_placeholder).fit().into(imageView);
+            layout.addView(imageView);
+            myGallery.addView(layout);
+
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu); // standard menuer
@@ -387,43 +400,34 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         switch (requestCode) {
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
-
                 Log.d("Audiorecording: ", data.getExtras().toString());
                 Log.d("Audioshit ", fileUri.toString());
                 break;
 
             case IMAGE_CAPTURE:
-                if(!(fileUri == null)){
-                    selectedImages.add(fileUri.toString());
-                }else{
-                    Log.d("Image Captured error",""+fileUri);
-                }
-
-                //selectedImagesShow();
-                //shownImages.clear();
-                //updatePhotoThump();
-                selectedImagesShow();
+                selectedImages.add(fileUri.toString());
+                shownImages.clear();
+                updatePhotoThump();
                 break;
 
             case IMAGE_SELECT:
                 String abc = data.toString();
-                //Log.d("Pre multi img check-->", abc);
+                Log.d("Pre multi img check-->", abc);
                 if (data.getClipData() != null) {
                     ClipData clip = data.getClipData();
                     for (int i = 0; i < clip.getItemCount(); i++) {
                         ClipData.Item item = clip.getItemAt(i);
                         Uri uri = item.getUri();
                         //Indsæt uri i liste
-                        // Log.d("URI check ----->", uri.toString());
+                        Log.d("URI check ----->", uri.toString());
                         selectedImages.add(uri.toString());
                     }
                 } else {
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData().toString());
                 }
-                //shownImages.clear();
-                //updatePhotoThump();
-                selectedImagesShow();
+                shownImages.clear();
+                updatePhotoThump();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -483,7 +487,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.setText(jsonData.get("donator").toString());
                     edtTextRefProducer.setText(jsonData.get("producer").toString());
                     edtGeoArea.setText(jsonData.get("postnummer").toString());
-                    //shownImages.clear();
+                    shownImages.clear();
 
                     JSONObject jsonImages = new JSONObject(jsonData.get("images").toString());
 
@@ -496,7 +500,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         i++;
                     }
                     selectedImagesShow();
-                    //updatePhotoThump();
+                    updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -659,20 +663,5 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     protected void onResume() {
         dismissLoadingDialog();
         super.onResume();
-    }
-
-    public void selectedImagesShow() {
-        myGallery.removeAllViews();
-        for (String paths : selectedImages) {
-            LinearLayout layout = new LinearLayout(getApplicationContext());
-            layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
-            ImageView imageView = new ImageView(getApplicationContext());
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(220, 220));
-            //imageView.getLayoutParams().width = 120;
-            Picasso.with(this).load(paths).placeholder(R.drawable.ic_placeholder).fit().into(imageView);
-            layout.addView(imageView);
-            myGallery.addView(layout);
-
-        }
     }
 }
