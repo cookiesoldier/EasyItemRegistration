@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -92,7 +91,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private ProgressDialog progress;
 
-    
+
+    TextView textView7;
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
@@ -113,6 +113,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
+
+
 
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
@@ -150,7 +152,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
 
-        myGallery = (LinearLayout) findViewById(R.id.mygallery);
+        myGallery = (LinearLayout)findViewById(R.id.mygallery);
        /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
         }
@@ -162,6 +164,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     public void selectedImagesShow(){
+        myGallery.removeAllViews();
 
         for(String paths: selectedImages){
             LinearLayout layout = new LinearLayout(getApplicationContext());
@@ -209,15 +212,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (v == edtRecieveDate) {
             getSetDate(1);
 
-            // Log.d("edtRecieveData", edtRecieveDate.getText().toString());
+            Log.d("edtRecieveData", edtRecieveDate.getText().toString());
         }
         if (v == edtDatingFrom) {
             getSetDate(2);
-            // Log.d("edtRecieveData", edtDatingFrom.getText().toString());
+            Log.d("edtRecieveData", edtDatingFrom.getText().toString());
         }
         if (v == edtDatingTo) {
             getSetDate(3);
-            // Log.d("edtRecieveData", edtDatingTo.getText().toString());
+            Log.d("edtRecieveData", edtDatingTo.getText().toString());
         }
 
         if (v == btnRecorder) {
@@ -243,7 +246,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-
             if (edtItemHeadline.getText().length() > 0) {
                 new AsyncTask() {
                     @Override
@@ -406,8 +408,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri.toString());
-                shownImages.clear();
-                updatePhotoThump();
+
+                selectedImagesShow();
+                //shownImages.clear();
+                //updatePhotoThump();
                 break;
 
             case IMAGE_SELECT:
@@ -426,8 +430,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData().toString());
                 }
-                shownImages.clear();
-                updatePhotoThump();
+                //shownImages.clear();
+                //updatePhotoThump();
+
+                selectedImagesShow();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -500,7 +506,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         i++;
                     }
                     selectedImagesShow();
-                    updatePhotoThump();
+                    //updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
