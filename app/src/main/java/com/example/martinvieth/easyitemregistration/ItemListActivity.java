@@ -50,7 +50,7 @@ public class ItemListActivity extends Activity {
 
                     // Show Alert
                     Toast.makeText(getApplicationContext(),
-                            "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
+                            "  ListItem : " + itemValue, Toast.LENGTH_LONG)
                             .show();
                     Intent intent = new Intent();
                     intent.putExtra("seletedItem", itemValue);
