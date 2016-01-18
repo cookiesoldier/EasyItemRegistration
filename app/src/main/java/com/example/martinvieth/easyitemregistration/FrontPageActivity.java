@@ -24,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,10 +87,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtTextRefProducer;
     EditText edtGeoArea;
 
+    LinearLayout myGallery;
+
     private ProgressDialog progress;
 
-
-    TextView textView7;
+    
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
@@ -110,6 +112,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
+
+
+
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
@@ -146,7 +151,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
 
-
+        myGallery = (LinearLayout)findViewById(R.id.mygallery);
        /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
             @Override
         }
@@ -156,6 +161,21 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }); */
     }
 
+
+    public void selectedImagesShow(){
+
+        for(String paths: selectedImages){
+            LinearLayout layout = new LinearLayout(getApplicationContext());
+            layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+            ImageView imageView = new ImageView(getApplicationContext());
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(220, 220));
+            //imageView.getLayoutParams().width = 120;
+            Picasso.with(this).load(paths).placeholder(R.drawable.ic_placeholder).fit().into(imageView);
+            layout.addView(imageView);
+            myGallery.addView(layout);
+
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu); // standard menuer
@@ -291,9 +311,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     //inform user item was added and delete the data and files so new can be added or if it failed
                     if (result.equals("succes")) {
                         deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Registration Saved", Toast.LENGTH_LONG).show();
                     } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Failed to save registration", Toast.LENGTH_LONG).show();
 
 
                     }
@@ -510,7 +530,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                         i++;
                     }
-
+                    selectedImagesShow();
                     updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -590,6 +610,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         shownImages.clear();
         selectedImages.clear();
         selectedAudio.clear();
+        myGallery.removeAllViews();
     }
 
     private RegistreringsDTO getDataAndFiles(int itemNr) {
