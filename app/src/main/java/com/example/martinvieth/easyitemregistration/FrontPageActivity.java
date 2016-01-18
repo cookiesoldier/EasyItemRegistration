@@ -202,9 +202,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnRecorder) {
-            Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+
+            // Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION) bruges, hvis
+            // enheden har en default audio recorder
+            Intent intent = new Intent(FrontPageActivity.this, AudioRecorder.class);
             startActivityForResult(intent, AUDIO_CAPTURE);
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
+
         }
 
         if (v == btnGalleryPhoto) {
