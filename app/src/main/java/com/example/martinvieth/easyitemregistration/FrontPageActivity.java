@@ -91,7 +91,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private ProgressDialog progress;
 
-    
+
+    TextView textView7;
 
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
@@ -163,6 +164,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     public void selectedImagesShow(){
+        myGallery.removeAllViews();
 
         for(String paths: selectedImages){
             LinearLayout layout = new LinearLayout(getApplicationContext());
@@ -246,90 +248,63 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        if (itemNrDeterminer == -1) {
-                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
+            if (edtItemHeadline.getText().length() > 0) {
+                new AsyncTask() {
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            if (itemNrDeterminer == -1) {
+                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
 
-                        } else {
-
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
                             } else {
-                                return "failed";
+
+                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                    return "succes";
+                                } else {
+                                    return "failed";
+                                }
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
-            }.execute(100);
-        }
-        if (edtItemHeadline.getText().length() != 0) {
-            new AsyncTask() {
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        if (itemNrDeterminer == -1) {
-                            if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
 
-                        } else {
 
-                            if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                return "succes";
-                            } else {
-                                return "failed";
-                            }
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
+
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object result) {
+                        //inform user item was added and delete the data and files so new can be added or if it failed
+                        if (result.equals("succes")) {
+                            deleteDataAndFiles();
+                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                        } else if (result.equals("failed")) {
+                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+
+
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return "færdig!";  // <5>
-                }
-
-
-                @Override
-                protected void onProgressUpdate(Object... progress) {
-
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-                    //inform user item was added and delete the data and files so new can be added or if it failed
-                    if (result.equals("succes")) {
-                        deleteDataAndFiles();
-                        Toast.makeText(getApplicationContext(), "Registration Saved", Toast.LENGTH_LONG).show();
-                    } else if (result.equals("failed")) {
-                        Toast.makeText(getApplicationContext(), "Failed to save registration", Toast.LENGTH_LONG).show();
-
+                        itemNrDeterminer = -1;
 
                     }
-                    itemNrDeterminer = -1;
-
-                }
-            }.execute(100);
-        } else {
-            Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+                }.execute(100);
+            } else {
+                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+            }
         }
 
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
 
 
-        if (v == btnSearch)
-
-        {
+        if (v == btnSearch) {
             showLoadingDialog();
             new AsyncTask() {
                 String items;
@@ -435,8 +410,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri.toString());
-                shownImages.clear();
-                updatePhotoThump();
+
+                selectedImagesShow();
+                //shownImages.clear();
+                //updatePhotoThump();
                 break;
 
             case IMAGE_SELECT:
@@ -455,8 +432,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData().toString());
                 }
-                shownImages.clear();
-                updatePhotoThump();
+                //shownImages.clear();
+                //updatePhotoThump();
+
+                selectedImagesShow();
                 break;
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
@@ -529,7 +508,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         i++;
                     }
                     selectedImagesShow();
-                    updatePhotoThump();
+                    //updatePhotoThump();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
