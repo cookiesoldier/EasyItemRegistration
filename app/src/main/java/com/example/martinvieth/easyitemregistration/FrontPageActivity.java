@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,10 +45,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,19 +67,13 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     //Context c = getApplicationContext();
     final DatabaseDAO2 dataDAO = new DatabaseDAO2(this);
     private Uri fileUri;
-
-    ImageButton btnMenu;
+    Calendar myCalendar = Calendar.getInstance();
     ImageButton btnSearch;
 
     ImageButton btnRecorder;
     ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
-    ImageButton getBtnSearch;
-
-    ImageView photoThumb1;
-    ImageView photoThumb2;
-    ImageView photoThumb3;
 
     EditText edtItemHeadline;
     EditText edtBeskrivelse;
@@ -91,16 +88,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private ProgressDialog progress;
 
-
-    TextView textView7;
-
     //Int som vi bruger til at bestemme itemNR til opdatering af genstand, hvis den er -1 så opdaterer vi ikke men laver et nyt item istedet.
     int itemNrDeterminer = -1;
 
     //De valgte billeder fra enten camera eller galleri
     List<String> selectedImages = new ArrayList<>();
-    //De viste billeder fra galleri eller
-    List<Bitmap> shownImages = new ArrayList<>();
     //
     //De valgt optagelser
     List<Uri> selectedAudio = new ArrayList<>();
@@ -111,11 +103,11 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
 
+        //Burde gøre så skærmen ikke kan rotere
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
-
-
-
 
         btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
@@ -125,10 +117,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
         btnRecorder.setOnClickListener(this);
-
-        photoThumb1 = (ImageView) findViewById(R.id.photoThumb);
-        photoThumb2 = (ImageView) findViewById(R.id.photoThumb2);
-        photoThumb3 = (ImageView) findViewById(R.id.photoThumb3);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
@@ -153,13 +141,47 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingTo.setOnClickListener(this);
 
         myGallery = (LinearLayout)findViewById(R.id.mygallery);
-       /* findViewById(R.id.imageButtonRecorder).setOnClickListener(new View.OnClickListener() {
-            @Override
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
+        EIRapp.setSelectedImages(selectedImages);
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+        dismissLoadingDialog();
+
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        if(EIRapp.getSelectedImages() != null && EIRapp.getSavedData() != null) {
+            selectedImages = EIRapp.getSelectedImages();
+            selectedImagesShow();
+            RegistreringsDTO dataDTO = EIRapp.getSavedData();
+            updateFieldsOnResume(dataDTO);
         }
-           public void onClick(View v) {
-                startActivity(new Intent(FrontPageActivity.this, AudioRecorder.class));
-            }
-        }); */
+
+    }
+
+    private void updateFieldsOnResume(RegistreringsDTO dataDTO) {
+        if(dataDTO.getItemNr() != null){
+            itemNrDeterminer = Integer.parseInt(dataDTO.getItemNr());
+        }else{
+            itemNrDeterminer = -1;
+        }
+        edtItemHeadline.setText(dataDTO.getItemHeadline());
+        edtBeskrivelse.setText(dataDTO.getBeskrivelse());
+        edtRecieveDate.setText(dataDTO.getRecieveDate());
+        edtDatingFrom.setText(dataDTO.getDatingFrom());
+        edtDatingTo.setText(dataDTO.getDatingTo());
+        edtRefDonator.setText(dataDTO.getRefDonator());
+        edtTextRefProducer.setText(dataDTO.getRefProducer());
+        edtGeoArea.setText(dataDTO.getGeoArea());
     }
 
 
@@ -185,7 +207,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return true;
     }
 
-    Calendar myCalendar = Calendar.getInstance();
+
 
     private void updateLabel(int label) {
 
@@ -249,6 +271,17 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnAccept) {
             if (edtItemHeadline.getText().length() > 0) {
+                if(true){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+                    try {
+                        Calendar validDate = new GregorianCalendar();
+                        Date date = sdf.parse(edtDatingFrom.getText().toString());
+                        Date date1 = sdf.parse(edtDatingTo.getText().toString());
+                        Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
+                        Log.d(edtDatingTo.getText().toString(),Long.toString(date1.getTime()));
+                        //validDate.setTime(date);
+                        //validDate.setTime(date1);
+                        if (date.getTime() < date1.getTime()) {
                 new AsyncTask() {
                     @Override
                     protected Object doInBackground(Object... executeParametre) {
@@ -285,9 +318,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         //inform user item was added and delete the data and files so new can be added or if it failed
                         if (result.equals("succes")) {
                             deleteDataAndFiles();
-                            Toast.makeText(getApplicationContext(), "Succes:Added item!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
                         } else if (result.equals("failed")) {
-                            Toast.makeText(getApplicationContext(), "Failed to add item!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
 
 
                         }
@@ -295,8 +328,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                     }
                 }.execute(100);
+
+                        } else {
+
+                        Toast.makeText(getApplicationContext(),"Dato Fejl", Toast.LENGTH_LONG).show();
+                        }
+                        //Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
             } else {
-                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Overskrift mangler", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -412,8 +457,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 selectedImages.add(fileUri.toString());
 
                 selectedImagesShow();
-                //shownImages.clear();
-                //updatePhotoThump();
+
                 break;
 
             case IMAGE_SELECT:
@@ -432,9 +476,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     Log.d("URI check -----> ", data.getData().toString());
                     selectedImages.add(data.getData().toString());
                 }
-                //shownImages.clear();
-                //updatePhotoThump();
-
                 selectedImagesShow();
                 break;
             case ITEMLIST_CHOSEN:
@@ -463,8 +504,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 try {
                     itemData = dataDAO.getItem(itemNr);
                     Log.d("reply database", "svar fra database." + itemData);
-
-
                     //Så skal vi sætte data ind i vores registreringsDTO som opbevarer den data vi arbejder med nu.
 
 
@@ -495,20 +534,20 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     edtRefDonator.setText(jsonData.get("donator").toString());
                     edtTextRefProducer.setText(jsonData.get("producer").toString());
                     edtGeoArea.setText(jsonData.get("postnummer").toString());
-                    shownImages.clear();
+
 
                     JSONObject jsonImages = new JSONObject(jsonData.get("images").toString());
 
                     int i = 0;
                     while (jsonImages.opt("image_" + Integer.toString(i)) != null) {
-                        JSONObject per = new JSONObject(jsonImages.opt("image_" + Integer.toString(i)).toString());
-                        Log.d("test data url:", per.get("href").toString());
-                        selectedImages.add(per.get("href").toString());
+                        JSONObject image = new JSONObject(jsonImages.opt("image_" + Integer.toString(i)).toString());
+                        Log.d("test data url:", image.get("href").toString());
+                        selectedImages.add(image.get("href").toString());
 
                         i++;
                     }
                     selectedImagesShow();
-                    //updatePhotoThump();
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -580,11 +619,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtRefDonator.setText("");
         edtTextRefProducer.setText("");
         edtGeoArea.setText("");
-        photoThumb1.setImageDrawable(null);
-        photoThumb2.setImageDrawable(null);
-        photoThumb3.setImageDrawable(null);
         itemNrDeterminer = -1;
-        shownImages.clear();
         selectedImages.clear();
         selectedAudio.clear();
         myGallery.removeAllViews();
@@ -623,32 +658,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return registrering;
     }
 
-    /**
-     * Denne metode tager billederne fra shownimages og lægger dem ind i de 3 photothump
-     */
-    public void updatePhotoThump() {
-        Log.d("updateThump images: ", Integer.toString(selectedImages.size()));
 
-        if (selectedImages.size() == 1) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-
-            //photoThumb1.setImageBitmap(shownImages.get(0));
-        } else if (selectedImages.size() == 2) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-
-            //photoThumb1.setImageBitmap(shownImages.get(0));
-            // photoThumb2.setImageBitmap(shownImages.get(1));
-        } else if (selectedImages.size() >= 3) {
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 1)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb1);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 2)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb2);
-            Picasso.with(this).load(selectedImages.get(selectedImages.size() - 3)).placeholder(R.drawable.ic_placeholder).fit().into(photoThumb3);
-            //photoThumb1.setImageBitmap(shownImages.get(0));
-            // photoThumb2.setImageBitmap(shownImages.get(1));
-            // photoThumb3.setImageBitmap(shownImages.get(2));
-        }
-
-    }
 
     public void showLoadingDialog() {
 
@@ -668,8 +678,5 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
-    protected void onResume() {
-        dismissLoadingDialog();
-        super.onResume();
-    }
+
 }
