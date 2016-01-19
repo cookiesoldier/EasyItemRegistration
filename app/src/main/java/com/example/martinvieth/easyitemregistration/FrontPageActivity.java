@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -55,13 +56,12 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     final DatabaseDAO2 dataDAO = new DatabaseDAO2(this);
     private Uri fileUri;
     Calendar myCalendar = Calendar.getInstance();
-    ImageButton btnSearch;
+    ImageView btnSearch;
 
-    ImageButton btnRecorder;
-    ImageButton btnGalleryPhoto;
-    ImageButton btnGotoCamera;
-    ImageButton btnAccept;
-    ImageButton btnCancel;
+    ImageView btnRecorder;
+    ImageView btnGalleryPhoto;
+    ImageView btnGotoCamera;
+    ImageView btnAccept;
 
     EditText edtItemHeadline;
     EditText edtBeskrivelse;
@@ -71,6 +71,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     EditText edtRefDonator;
     EditText edtTextRefProducer;
     EditText edtGeoArea;
+
+    TextView btnCancel;
 
     LinearLayout myGallery;
 
@@ -94,22 +96,22 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         //Burde gøre så skærmen ikke kan rotere
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        btnGalleryPhoto = (ImageButton) findViewById(R.id.imageButtonCamerafolder);
-        btnAccept = (ImageButton) findViewById(R.id.imageButtonDone);
+        btnGalleryPhoto = (ImageView) findViewById(R.id.imageButtonCamerafolder);
+        btnAccept = (ImageView) findViewById(R.id.imageButtonDone);
 
-        btnGotoCamera = (ImageButton) findViewById(R.id.imageButtonCamera);
+        btnGotoCamera = (ImageView) findViewById(R.id.imageButtonCamera);
         btnGotoCamera.setOnClickListener(this);
 
-        btnSearch = (ImageButton) findViewById(R.id.imageButtonSearch);
+        btnSearch = (ImageView) findViewById(R.id.imageButtonSearch);
         btnSearch.setOnClickListener(this);
 
-        btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
+        btnRecorder = (ImageView) findViewById(R.id.imageButtonRecorder);
         btnRecorder.setOnClickListener(this);
 
-        btnCancel = (ImageButton) findViewById(R.id.imageButtonCancel);
+        btnCancel = (TextView) findViewById(R.id.imageButtonCancel);
         btnCancel.setOnClickListener(this);
 
-        btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
+        btnGalleryPhoto.setImageResource(R.mipmap.ic_photo_library);
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
