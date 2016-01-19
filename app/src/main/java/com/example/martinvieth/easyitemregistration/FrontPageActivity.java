@@ -7,10 +7,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -20,7 +16,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
@@ -28,11 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.media.MediaRecorder;
-import android.media.MediaPlayer;
 
 import com.squareup.picasso.Picasso;
 
@@ -41,18 +32,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -147,7 +132,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         edtDatingFrom.setOnClickListener(this);
         edtDatingTo.setOnClickListener(this);
 
-        myGallery = (LinearLayout)findViewById(R.id.mygallery);
+        myGallery = (LinearLayout) findViewById(R.id.mygallery);
 
     }
 
@@ -167,15 +152,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         dismissLoadingDialog();
 
         EIRApplication EIRapp = (EIRApplication) getApplication();
-        if(EIRapp.getSelectedImages() != null && EIRapp.getSavedData() != null) {
+        if (EIRapp.getSelectedImages() != null && EIRapp.getSavedData() != null) {
             selectedImages = EIRapp.getSelectedImages();
             selectedImagesShow();
             RegistreringsDTO dataDTO = EIRapp.getSavedData();
             updateFieldsOnResume(dataDTO);
-        }else{
+        } else {
             Log.d("No previous data found", "NADADADADA");
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -195,9 +181,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
     private void updateFieldsOnResume(RegistreringsDTO dataDTO) {
-        if(dataDTO.getItemNr() != null){
+        if (dataDTO.getItemNr() != null) {
             itemNrDeterminer = Integer.parseInt(dataDTO.getItemNr());
-        }else{
+        } else {
             itemNrDeterminer = -1;
         }
         edtItemHeadline.setText(dataDTO.getItemHeadline());
@@ -211,10 +197,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
-    public void selectedImagesShow(){
+    public void selectedImagesShow() {
         myGallery.removeAllViews();
 
-        for(String paths: selectedImages){
+        for (String paths : selectedImages) {
             LinearLayout layout = new LinearLayout(getApplicationContext());
             layout.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
             ImageView imageView = new ImageView(getApplicationContext());
@@ -226,6 +212,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu); // standard menuer
@@ -234,10 +221,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
-
     private void updateLabel(int label) {
 
-        String myFormat = "yyyy/MM/dd"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
         if (label == 1) {
@@ -257,7 +243,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        if(v == btnCancel){
+        if (v == btnCancel) {
             deleteDataAndFiles();
 
         }
@@ -300,67 +286,67 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            if (edtItemHeadline.getText().length() > 0 ) {
-                if (OnDateCheck()) {
-                    if (isNetworkAvailable()){
-                    new AsyncTask() {
-                        @Override
-                        protected Object doInBackground(Object... executeParametre) {
-                            try {
-                                if (itemNrDeterminer == -1) {
-                                    if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                        return "succes";
-                                    } else {
-                                        return "failed";
-                                    }
+            if (edtItemHeadline.getText().length() > 0) {
+                if (onDateCheck()) {
+                    if (isNetworkAvailable()) {
+                        new AsyncTask() {
+                            @Override
+                            protected Object doInBackground(Object... executeParametre) {
+                                try {
+                                    if (itemNrDeterminer == -1) {
+                                        if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                            return "succes";
+                                        } else {
+                                            return "failed";
+                                        }
 
-                                } else {
-
-                                    if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                        return "succes";
                                     } else {
-                                        return "failed";
+
+                                        if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                            return "succes";
+                                        } else {
+                                            return "failed";
+                                        }
                                     }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                return "færdig!";  // <5>
                             }
-                            return "færdig!";  // <5>
-                        }
 
 
-                        @Override
-                        protected void onProgressUpdate(Object... progress) {
-
-                        }
-
-                        @Override
-                        protected void onPostExecute(Object result) {
-                            //inform user item was added and delete the data and files so new can be added or if it failed
-                            if (result.equals("succes")) {
-                                deleteDataAndFiles();
-                                Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
-                            } else if (result.equals("failed")) {
-                                Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
-
+                            @Override
+                            protected void onProgressUpdate(Object... progress) {
 
                             }
-                            itemNrDeterminer = -1;
 
-                        }
-                    }.execute(100);
+                            @Override
+                            protected void onPostExecute(Object result) {
+                                //inform user item was added and delete the data and files so new can be added or if it failed
+                                if (result.equals("succes")) {
+                                    deleteDataAndFiles();
+                                    Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
+                                } else if (result.equals("failed")) {
+                                    Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
 
-                } else {
-                        Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse", Toast.LENGTH_LONG).show();
-                }
+
+                                }
+                                itemNrDeterminer = -1;
+
+                            }
+                        }.execute(100);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse. Prøv igen!", Toast.LENGTH_LONG).show();
+                    }
 
                 } else {
                     Toast.makeText(getApplicationContext(), " Fejl i Datoen: Ret venligst Datering Fra og Datering Til", Toast.LENGTH_LONG).show();
                 }
 
-                }else {
-                        Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -369,44 +355,50 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnSearch) {
             showLoadingDialog();
-            new AsyncTask() {
-                String items;
+            if (isNetworkAvailable()) {
+                new AsyncTask() {
+                    String items;
 
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
-                        items = dataDAO.itemList();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
+                            items = dataDAO.itemList();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
 
-                @Override
-                protected void onProgressUpdate(Object... progress) {
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
 
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-
-                    Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
-                    try {
-                        System.out.print("trying...");
-                        ArrayList<String> a = ItemListParse(items);
-                        System.out.println("items : " + a.size());
-                        itemListActivity.putStringArrayListExtra("data", a);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
-                }
-            }.execute(100);
+
+                    @Override
+                    protected void onPostExecute(Object result) {
+
+                        Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
+                        try {
+                            System.out.print("trying...");
+                            ArrayList<String> a = ItemListParse(items);
+                            System.out.println("items : " + a.size());
+                            itemListActivity.putStringArrayListExtra("data", a);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
+                    }
+                }.execute(100);
+
+            } else {
+                dismissLoadingDialog();
+                Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse. Prøv igen!", Toast.LENGTH_LONG).show();
+
+            }
 
         }
-
     }
 
     private void getSetDate(final int labelNr) {
@@ -678,7 +670,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     }
 
 
-
     public void showLoadingDialog() {
 
         if (progress == null) {
@@ -697,23 +688,31 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
-    public boolean OnDateCheck() {
+    public boolean onDateCheck() {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = null;
+        Date date1 = null;
 
         try {
-            Date date = sdf.parse(edtDatingFrom.getText().toString());
-            Date date1 = sdf.parse(edtDatingTo.getText().toString());
-            Log.d(edtDatingFrom.getText().toString(), Long.toString(date.getTime()));
-            Log.d(edtDatingTo.getText().toString(), Long.toString(date1.getTime()));
+            date = sdf.parse(edtDatingFrom.getText().toString());
+            date1 = sdf.parse(edtDatingTo.getText().toString());
 
-            if (date.getTime() < date1.getTime()) {
-                return true;
-            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return false;
+
+        if (date != null && date1 != null) {
+            Log.d(edtDatingFrom.getText().toString(), Long.toString(date.getTime()));
+            Log.d(edtDatingTo.getText().toString(), Long.toString(date1.getTime()));
+
+            if (date.getTime() <= date1.getTime()) {
+                return true;
+            }
+            return false;
+        } else return true;
+
+
     }
 
     /*
@@ -726,18 +725,18 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     */
 
     public boolean isNetworkAvailable() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
