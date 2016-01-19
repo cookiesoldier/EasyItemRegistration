@@ -285,6 +285,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
+            showLoadingDialog();
             if (edtItemHeadline.getText().length() > 0) {
                 if (onDateCheck()) {
                     if (isNetworkAvailable()) {
@@ -331,7 +332,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                                 }
                                 itemNrDeterminer = -1;
-
+                                dismissLoadingDialog();
                             }
                         }.execute(100);
 
