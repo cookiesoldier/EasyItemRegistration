@@ -305,6 +305,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
+            showLoadingDialog();
             if (edtItemHeadline.getText().length() > 0) {
                 if (onDateCheck()) {
                     if (isNetworkAvailable()) {
@@ -351,7 +352,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                                 }
                                 itemNrDeterminer = -1;
-
+                                dismissLoadingDialog();
                             }
                         }.execute(100);
 
@@ -733,16 +734,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     }
-
-    /*
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-    */
-
+    
     public boolean isNetworkAvailable() {
         boolean status = false;
         try {
