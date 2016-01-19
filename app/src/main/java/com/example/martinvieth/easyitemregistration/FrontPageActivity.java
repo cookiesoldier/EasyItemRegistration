@@ -270,78 +270,78 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            if (edtItemHeadline.getText().length() > 0) {
-                if(true){
+            if (edtItemHeadline.getText().length() > 0 ) {
+                if (OnDateCheck()) {
+
+
+                /*
+                if (true) {
+
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
                     try {
                         Calendar validDate = new GregorianCalendar();
                         Date date = sdf.parse(edtDatingFrom.getText().toString());
                         Date date1 = sdf.parse(edtDatingTo.getText().toString());
-                        Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
-                        Log.d(edtDatingTo.getText().toString(),Long.toString(date1.getTime()));
+                        Log.d(edtDatingFrom.getText().toString(), Long.toString(date.getTime()));
+                        Log.d(edtDatingTo.getText().toString(), Long.toString(date1.getTime()));
                         //validDate.setTime(date);
                         //validDate.setTime(date1);
                         if (date.getTime() < date1.getTime()) {
-                new AsyncTask() {
-                    @Override
-                    protected Object doInBackground(Object... executeParametre) {
-                        try {
-                            if (itemNrDeterminer == -1) {
-                                if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                    return "succes";
-                                } else {
-                                    return "failed";
-                                }
+                            */
+                    new AsyncTask() {
+                        @Override
+                        protected Object doInBackground(Object... executeParametre) {
+                            try {
+                                if (itemNrDeterminer == -1) {
+                                    if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                        return "succes";
+                                    } else {
+                                        return "failed";
+                                    }
 
-                            } else {
-
-                                if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                    return "succes";
                                 } else {
-                                    return "failed";
+
+                                    if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                        return "succes";
+                                    } else {
+                                        return "failed";
+                                    }
                                 }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            return "færdig!";  // <5>
                         }
-                        return "færdig!";  // <5>
-                    }
 
 
-                    @Override
-                    protected void onProgressUpdate(Object... progress) {
-
-                    }
-
-                    @Override
-                    protected void onPostExecute(Object result) {
-                        //inform user item was added and delete the data and files so new can be added or if it failed
-                        if (result.equals("succes")) {
-                            deleteDataAndFiles();
-                            Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
-                        } else if (result.equals("failed")) {
-                            Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
-
+                        @Override
+                        protected void onProgressUpdate(Object... progress) {
 
                         }
-                        itemNrDeterminer = -1;
 
-                    }
-                }.execute(100);
+                        @Override
+                        protected void onPostExecute(Object result) {
+                            //inform user item was added and delete the data and files so new can be added or if it failed
+                            if (result.equals("succes")) {
+                                deleteDataAndFiles();
+                                Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
+                            } else if (result.equals("failed")) {
+                                Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
 
-                        } else {
 
-                        Toast.makeText(getApplicationContext(),"Dato Fejl", Toast.LENGTH_LONG).show();
+                            }
+                            itemNrDeterminer = -1;
+
                         }
-                        //Log.d(edtDatingFrom.getText().toString(),Long.toString(date.getTime()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    }.execute(100);
 
+                } else {
+                    Toast.makeText(getApplicationContext(), " Fejl i Datoen: Ret venligst Datering Fra og Datering Til", Toast.LENGTH_LONG).show();
                 }
 
             } else {
-                Toast.makeText(getApplicationContext(), "Overskrift mangler", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!!", Toast.LENGTH_SHORT).show();
+
             }
         }
 
@@ -678,5 +678,26 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
+    public boolean OnDateCheck() {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+        //Calendar validDate = new GregorianCalendar();
+
+        try {
+            Date date = sdf.parse(edtDatingFrom.getText().toString());
+            Date date1 = sdf.parse(edtDatingTo.getText().toString());
+            Log.d(edtDatingFrom.getText().toString(), Long.toString(date.getTime()));
+            Log.d(edtDatingTo.getText().toString(), Long.toString(date1.getTime()));
+
+            if (date.getTime() < date1.getTime()) {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
+//validDate.setTime(date);
+//validDate.setTime(date1);
+
