@@ -272,22 +272,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (v == btnAccept) {
             if (edtItemHeadline.getText().length() > 0 ) {
                 if (OnDateCheck()) {
-
-
-                /*
-                if (true) {
-
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
-                    try {
-                        Calendar validDate = new GregorianCalendar();
-                        Date date = sdf.parse(edtDatingFrom.getText().toString());
-                        Date date1 = sdf.parse(edtDatingTo.getText().toString());
-                        Log.d(edtDatingFrom.getText().toString(), Long.toString(date.getTime()));
-                        Log.d(edtDatingTo.getText().toString(), Long.toString(date1.getTime()));
-                        //validDate.setTime(date);
-                        //validDate.setTime(date1);
-                        if (date.getTime() < date1.getTime()) {
-                            */
                     new AsyncTask() {
                         @Override
                         protected Object doInBackground(Object... executeParametre) {
@@ -340,7 +324,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 }
 
             } else {
-                Toast.makeText(getApplicationContext(), "Mangler Overskrift!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -681,7 +665,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public boolean OnDateCheck() {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
-        //Calendar validDate = new GregorianCalendar();
 
         try {
             Date date = sdf.parse(edtDatingFrom.getText().toString());
@@ -698,6 +681,5 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return false;
     }
 }
-//validDate.setTime(date);
-//validDate.setTime(date1);
+
 
