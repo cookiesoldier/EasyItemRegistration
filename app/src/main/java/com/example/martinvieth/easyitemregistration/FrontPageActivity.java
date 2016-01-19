@@ -236,7 +236,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     private void updateLabel(int label) {
 
-        String myFormat = "yyyy/MM/dd"; //In which you need put here
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.GERMAN);
 
         if (label == 1) {
@@ -698,7 +698,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     public boolean OnDateCheck() {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
 
         try {
             Date date = sdf.parse(edtDatingFrom.getText().toString());
