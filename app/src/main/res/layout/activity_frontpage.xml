@@ -52,12 +52,27 @@
 
             <ImageButton
                 android:id="@+id/imageButtonSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:background="#1277e3"
                 android:clickable="true"
-                android:src="@drawable/ic_search" />
+                android:src="@drawable/ic_search"
+                android:layout_weight="0" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"></LinearLayout>
+
+            <ImageButton
+                android:id="@+id/imageButtonCancel"
+                android:background="#1277e3"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_cancel"
+                android:layout_weight="0" />
 
         </LinearLayout>
 

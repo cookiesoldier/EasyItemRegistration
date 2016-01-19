@@ -38,6 +38,8 @@
         </activity>
         <activity android:name=".Audiorecorder_2" >
         </activity>
+        <activity android:name=".MainActivity" >
+        </activity>
     </application>
 
 </manifest>

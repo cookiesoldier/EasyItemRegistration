@@ -76,6 +76,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
+    ImageButton btnCancel;
 
     EditText edtItemHeadline;
     EditText edtBeskrivelse;
@@ -120,6 +121,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
         btnRecorder.setOnClickListener(this);
 
+        btnCancel = (ImageButton) findViewById(R.id.imageButtonCancel);
+        btnCancel.setOnClickListener(this);
+
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
@@ -146,13 +150,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
     }
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStart() {
+        super.onStart();
 
         EIRApplication EIRapp = (EIRApplication) getApplication();
-        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
-        EIRapp.setSelectedImages(selectedImages);
+        EIRapp.checkForData();
+
 
     }
 
@@ -166,8 +171,26 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             selectedImagesShow();
             RegistreringsDTO dataDTO = EIRapp.getSavedData();
             updateFieldsOnResume(dataDTO);
+        }else{
+            Log.d("No previous data found", "NADADADADA");
         }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
+        EIRapp.setSelectedImages(selectedImages);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        EIRApplication EIRapp = (EIRApplication) getApplication();
+        EIRapp.saveEverything();
     }
 
     private void updateFieldsOnResume(RegistreringsDTO dataDTO) {
@@ -233,6 +256,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
+        if(v == btnCancel){
+            deleteDataAndFiles();
+
+        }
         if (v == edtRecieveDate) {
             getSetDate(1);
 
@@ -414,7 +441,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
         JSONArray jsonArrayData = new JSONArray(items);
-        System.out.println("ItemListParse(): jsonarray " + jsonArrayData.length());
+        //System.out.println("ItemListParse(): jsonarray " + jsonArrayData.length());
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
             final JSONObject dataPoint = jsonArrayData.getJSONObject(i);
@@ -440,7 +467,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
                 Log.d("Audiorecording: ", data.getExtras().toString());
-                Log.d("Audioshit ", fileUri.toString());
+                Log.d("Audio-info ", fileUri.toString());
                 break;
 
             case IMAGE_CAPTURE:
@@ -621,7 +648,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         RegistreringsDTO registrering;
 
         if (itemNr == -1) {
-            registrering = new RegistreringsDTO(edtItemHeadline.getText().toString(),
+            registrering = new RegistreringsDTO(
+                    edtItemHeadline.getText().toString(),
                     edtBeskrivelse.getText().toString(),
                     edtRecieveDate.getText().toString(),
                     edtDatingFrom.getText().toString(),
