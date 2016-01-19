@@ -74,6 +74,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     ImageButton btnGalleryPhoto;
     ImageButton btnGotoCamera;
     ImageButton btnAccept;
+    ImageButton btnCancel;
 
     EditText edtItemHeadline;
     EditText edtBeskrivelse;
@@ -117,6 +118,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnRecorder = (ImageButton) findViewById(R.id.imageButtonRecorder);
         btnRecorder.setOnClickListener(this);
+
+        btnCancel = (ImageButton) findViewById(R.id.imageButtonCancel);
+        btnCancel.setOnClickListener(this);
 
         btnGalleryPhoto.setImageResource(R.drawable.ic_camerafolder);
 
@@ -250,6 +254,10 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
+        if(v == btnCancel){
+            deleteDataAndFiles();
+
+        }
         if (v == edtRecieveDate) {
             getSetDate(1);
 
