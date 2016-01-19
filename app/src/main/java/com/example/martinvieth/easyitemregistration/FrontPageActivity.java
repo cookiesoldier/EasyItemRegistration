@@ -256,7 +256,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
 
-        if(v == btnCancel){
+        if (v == btnCancel) {
             deleteDataAndFiles();
 
         }
@@ -299,67 +299,67 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnAccept) {
-            if (edtItemHeadline.getText().length() > 0 ) {
+            if (edtItemHeadline.getText().length() > 0) {
                 if (OnDateCheck()) {
-                    if (isNetworkAvailable()){
-                    new AsyncTask() {
-                        @Override
-                        protected Object doInBackground(Object... executeParametre) {
-                            try {
-                                if (itemNrDeterminer == -1) {
-                                    if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
-                                        return "succes";
-                                    } else {
-                                        return "failed";
-                                    }
+                    if (isNetworkAvailable()) {
+                        new AsyncTask() {
+                            @Override
+                            protected Object doInBackground(Object... executeParametre) {
+                                try {
+                                    if (itemNrDeterminer == -1) {
+                                        if (dataDAO.createItem(getDataAndFiles(itemNrDeterminer))) {
+                                            return "succes";
+                                        } else {
+                                            return "failed";
+                                        }
 
-                                } else {
-
-                                    if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
-                                        return "succes";
                                     } else {
-                                        return "failed";
+
+                                        if (dataDAO.updateItem(getDataAndFiles(itemNrDeterminer))) {
+                                            return "succes";
+                                        } else {
+                                            return "failed";
+                                        }
                                     }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                return "færdig!";  // <5>
                             }
-                            return "færdig!";  // <5>
-                        }
 
 
-                        @Override
-                        protected void onProgressUpdate(Object... progress) {
-
-                        }
-
-                        @Override
-                        protected void onPostExecute(Object result) {
-                            //inform user item was added and delete the data and files so new can be added or if it failed
-                            if (result.equals("succes")) {
-                                deleteDataAndFiles();
-                                Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
-                            } else if (result.equals("failed")) {
-                                Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
-
+                            @Override
+                            protected void onProgressUpdate(Object... progress) {
 
                             }
-                            itemNrDeterminer = -1;
 
-                        }
-                    }.execute(100);
+                            @Override
+                            protected void onPostExecute(Object result) {
+                                //inform user item was added and delete the data and files so new can be added or if it failed
+                                if (result.equals("succes")) {
+                                    deleteDataAndFiles();
+                                    Toast.makeText(getApplicationContext(), "Gemt succesfuldt", Toast.LENGTH_LONG).show();
+                                } else if (result.equals("failed")) {
+                                    Toast.makeText(getApplicationContext(), "Kunne ikke Gemme", Toast.LENGTH_LONG).show();
 
-                } else {
-                        Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse", Toast.LENGTH_LONG).show();
-                }
+
+                                }
+                                itemNrDeterminer = -1;
+
+                            }
+                        }.execute(100);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse. Prøv igen!", Toast.LENGTH_LONG).show();
+                    }
 
                 } else {
                     Toast.makeText(getApplicationContext(), " Fejl i Datoen: Ret venligst Datering Fra og Datering Til", Toast.LENGTH_LONG).show();
                 }
 
-                }else {
-                        Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
-                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -368,44 +368,50 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnSearch) {
             showLoadingDialog();
-            new AsyncTask() {
-                String items;
+            if (isNetworkAvailable()) {
+                new AsyncTask() {
+                    String items;
 
-                @Override
-                protected Object doInBackground(Object... executeParametre) {
-                    try {
-                        //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
-                        items = dataDAO.itemList();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    @Override
+                    protected Object doInBackground(Object... executeParametre) {
+                        try {
+                            //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
+                            items = dataDAO.itemList();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return "færdig!";  // <5>
                     }
-                    return "færdig!";  // <5>
-                }
 
-                @Override
-                protected void onProgressUpdate(Object... progress) {
+                    @Override
+                    protected void onProgressUpdate(Object... progress) {
 
-                }
-
-                @Override
-                protected void onPostExecute(Object result) {
-
-                    Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
-                    try {
-                        System.out.print("trying...");
-                        ArrayList<String> a = ItemListParse(items);
-                        System.out.println("items : " + a.size());
-                        itemListActivity.putStringArrayListExtra("data", a);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
-                }
-            }.execute(100);
+
+                    @Override
+                    protected void onPostExecute(Object result) {
+
+                        Intent itemListActivity = new Intent(FrontPageActivity.this, ItemListActivity.class);
+                        try {
+                            System.out.print("trying...");
+                            ArrayList<String> a = ItemListParse(items);
+                            System.out.println("items : " + a.size());
+                            itemListActivity.putStringArrayListExtra("data", a);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        startActivityForResult(itemListActivity, ITEMLIST_CHOSEN);
+                    }
+                }.execute(100);
+
+            } else {
+                dismissLoadingDialog();
+                Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse. Prøv igen!", Toast.LENGTH_LONG).show();
+
+            }
 
         }
-
     }
 
     private void getSetDate(final int labelNr) {
