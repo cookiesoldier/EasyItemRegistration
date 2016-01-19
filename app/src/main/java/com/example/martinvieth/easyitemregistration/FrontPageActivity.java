@@ -450,7 +450,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
                 Log.d("Audiorecording: ", data.getExtras().toString());
-                Log.d("Audioshit ", fileUri.toString());
+                Log.d("Audio-info ", fileUri.toString());
                 break;
 
             case IMAGE_CAPTURE:
