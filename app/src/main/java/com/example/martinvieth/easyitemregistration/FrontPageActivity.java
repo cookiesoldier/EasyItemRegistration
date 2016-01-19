@@ -1,10 +1,12 @@
 package com.example.martinvieth.easyitemregistration;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -245,7 +247,23 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
     public void onClick(View v) {
 
         if (v == btnCancel) {
-            deleteDataAndFiles();
+            AlertDialog alertDialog = new AlertDialog.Builder(FrontPageActivity.this).create();
+            alertDialog.setTitle("Alert");
+            alertDialog.setMessage("Vil du ryde felterne");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteDataAndFiles();
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"Annuller",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
 
         }
         if (v == edtRecieveDate) {
