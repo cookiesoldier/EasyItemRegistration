@@ -11,6 +11,8 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -272,6 +274,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         if (v == btnAccept) {
             if (edtItemHeadline.getText().length() > 0 ) {
                 if (OnDateCheck()) {
+                    if (isNetworkAvailable()){
                     new AsyncTask() {
                         @Override
                         protected Object doInBackground(Object... executeParametre) {
@@ -320,13 +323,16 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     }.execute(100);
 
                 } else {
+                        Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse", Toast.LENGTH_LONG).show();
+                }
+
+                } else {
                     Toast.makeText(getApplicationContext(), " Fejl i Datoen: Ret venligst Datering Fra og Datering Til", Toast.LENGTH_LONG).show();
                 }
 
-            } else {
-                Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
-
-            }
+                }else {
+                        Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
+                }
         }
 
 
@@ -679,6 +685,35 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             e.printStackTrace();
         }
         return false;
+    }
+
+    /*
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    */
+
+    public boolean isNetworkAvailable() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
     }
 }
 
