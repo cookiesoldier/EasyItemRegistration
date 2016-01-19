@@ -16,7 +16,7 @@ public class RegistreringsDTO {
 
 
 
-    private String itemNr;
+    private String itemNr = "-1";
     private String itemHeadline;
     private String beskrivelse;
 
