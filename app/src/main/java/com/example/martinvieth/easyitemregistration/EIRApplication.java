@@ -66,7 +66,10 @@ public class EIRApplication extends Application {
         //Først tilføjer vi hvert af DTO'ens punkter til et Jsonobjekt
         JSONObject dataDTO =new JSONObject();
         try {
-            dataDTO.put("itemnr",savedData.getItemNr());
+            if(savedData.getItemNr() != null){
+                dataDTO.put("itemnr",savedData.getItemNr());
+            }
+
             dataDTO.put("itemheadline",savedData.getItemHeadline());
             dataDTO.put("itemdescription",savedData.getBeskrivelse());
             dataDTO.put("itemrecieved",savedData.getRecieveDate());
