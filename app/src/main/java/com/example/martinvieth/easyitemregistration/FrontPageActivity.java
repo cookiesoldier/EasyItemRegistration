@@ -716,16 +716,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
     }
-
-    /*
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-    */
-
+    
     public boolean isNetworkAvailable() {
         boolean status = false;
         try {
