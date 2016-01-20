@@ -377,14 +377,17 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                         }.execute(100);
 
                     } else {
+                        dismissLoadingDialog();
                         Toast.makeText(getApplicationContext(), "Der er ingen netværks forbindelse. Prøv igen!", Toast.LENGTH_LONG).show();
                     }
 
                 } else {
+                    dismissLoadingDialog();
                     Toast.makeText(getApplicationContext(), " Fejl i Datoen: Ret venligst Datering Fra og Datering Til", Toast.LENGTH_LONG).show();
                 }
 
             } else {
+                dismissLoadingDialog();
                 Toast.makeText(getApplicationContext(), "Indtast venligst overskrift!", Toast.LENGTH_SHORT).show();
             }
         }
