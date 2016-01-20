@@ -61,10 +61,10 @@ public class CustomListAdapter2 extends BaseAdapter {
         url = url.substring(1);
         if (!url.contains("null")) {
             //Log.d("nrHeadUrl data--->", url);
-            Log.d("position if --->", Integer.toString(position)+ "---"+ holder.imageView.getId() + url);
+         //   Log.d("position if --->", Integer.toString(position)+ "---"+ holder.imageView.getId() + url);
             Picasso.with(context).load(url).placeholder(R.drawable.ic_placeholder).fit().into(holder.imageView);
         }else{
-            Log.d("position else--->" ,Integer.toString(position) + "---"+ holder.imageView.getId() + url);
+          //  Log.d("position else--->" ,Integer.toString(position) + "---"+ holder.imageView.getId() + url);
             holder.imageView.setImageResource(R.drawable.ic_placeholder);
         }
 

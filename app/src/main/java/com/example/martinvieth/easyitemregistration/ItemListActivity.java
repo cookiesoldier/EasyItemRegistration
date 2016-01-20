@@ -29,6 +29,9 @@ public class ItemListActivity extends Activity {
         //itemsListing = (ListView) findViewById(R.id.lVItems);
 
         ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
+
+
+
         final ListView listView = (ListView) findViewById(R.id.lVItems);
         listView.setAdapter(new CustomListAdapter2(this, itemsParsed));
 
@@ -47,9 +50,7 @@ public class ItemListActivity extends Activity {
                     String itemValue = (String) listView.getItemAtPosition(position);
 
                     // Show Alert
-                    Toast.makeText(getApplicationContext(),
-                            "  ListItem : " + itemValue, Toast.LENGTH_LONG)
-                            .show();
+                   // Toast.makeText(getApplicationContext(), "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent();
                     intent.putExtra("seletedItem", itemValue);
                     setResult(RESULT_OK, intent);
@@ -58,7 +59,7 @@ public class ItemListActivity extends Activity {
                 }
 
             });
-
+        }
     }
-}
+
 
