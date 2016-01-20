@@ -7,35 +7,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--
-    <Toolbar
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbarView"
-        android:background="#1277e3">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButtonMenuIcon"
-
-                android:layout_alignParentLeft="true"
-                android:background="#1277e3" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButtonSearch"
-                android:layout_alignParentRight="true"
-                android:background="#1277e3" />
-        </RelativeLayout>
-    </Toolbar>
-    -->
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
@@ -50,10 +21,12 @@
             android:background="#1277e3"
             android:orientation="horizontal">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonSearch"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="35dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="5dp"
                 android:layout_centerVertical="true"
                 android:background="#1277e3"
                 android:clickable="true"
@@ -66,12 +39,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"></LinearLayout>
 
-            <ImageButton
+            <TextView
                 android:id="@+id/imageButtonCancel"
                 android:background="#1277e3"
-                android:layout_width="45dp"
+                android:layout_width="wrap_content"
                 android:layout_height="45dp"
-                android:src="@drawable/ic_cancel"
+                android:gravity="center_vertical"
+                android:paddingRight="10dp"
+                android:text="CLEAR"
+                android:textSize="15dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
                 android:layout_weight="0" />
 
         </LinearLayout>
@@ -246,33 +224,40 @@
             android:layout_height="match_parent">
 
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonCamerafolder"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
                 android:background="#1277e3"
                 android:clickable="true"
-                android:src="@drawable/ic_camerafolder" />
+                android:src="@mipmap/ic_photo_library" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:id="@+id/imageButtonRecorder"
                     android:src="@mipmap/microphoneicon"
                     android:background="#1277e3"
                     android:layout_weight="0.5" />
+
             </LinearLayout>
 
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonCamera"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
 
@@ -311,17 +296,17 @@
             </LinearLayout>
 
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/imageButtonDone"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|right"
+                android:paddingRight="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_gravity="right"
-
                 android:background="#1277e3"
                 android:clickable="true"
-                android:src="@android:drawable/ic_menu_save" />
+                android:src="@mipmap/ic_save" />
 
 
         </LinearLayout>
