@@ -385,55 +385,6 @@ public class DatabaseDAO2 {
         }
     }
 
-    public String getImage(String urlPath) throws IOException {
 
-        //Først Finder vi et navn til filen som vi vil gemme, vi bruger timestamp til at lave et tidspunk
-
-        String fileName = "" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        Log.d("getImage fileName--->", fileName);
-        //vi finder lige ud af typen af filen
-
-        String fileType = urlPath.substring(urlPath.lastIndexOf("."));
-        // String fileType = urlPath.toString();
-        Log.d("getImage fileType--->", fileType);
-
-        File fileToSave = null;
-
-
-
-        try {
-            Log.d("UrlPath---->", urlPath);
-            URL urls = new URL(urlPath);
-            URLConnection conn = urls.openConnection();
-
-            InputStream is = conn.getInputStream();
-
-            BufferedInputStream input = new BufferedInputStream(is);
-            //Find den path til mappe vi gerne vil gemme billedet i
-            //fileToSave = new File();
-
-
-            if (fileToSave == null)
-                return null;
-
-            OutputStream output = new FileOutputStream(fileToSave);
-
-
-            byte[] data = new byte[1024];
-            int count;
-            while ((count = input.read(data)) != -1) {
-                output.write(data, 0, count);
-            }
-
-            output.flush();
-            input.close();
-            output.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
 
 }

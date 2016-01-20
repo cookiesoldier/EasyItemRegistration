@@ -14,21 +14,15 @@ import java.util.List;
 public class RegistreringsDTO {
 
 
-
-
     private String itemNr = "-1";
     private String itemHeadline;
     private String beskrivelse;
-
     private  String recieveDate;
     private  String datingFrom;
     private  String datingTo;
-
     private  String refDonator;
     private  String refProducer;
-    //er en small int??
     private String geoArea;
-
     private List<String> images;
     private List<Uri> audio;
 

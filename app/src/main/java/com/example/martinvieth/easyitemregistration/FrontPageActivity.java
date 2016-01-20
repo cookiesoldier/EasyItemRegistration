@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -253,6 +255,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
     }
 
+    public static boolean isAvailable(Context ctx, Intent intent) {
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -275,9 +285,15 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         }
 
         if (v == btnRecorder) {
-
             Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-            startActivityForResult(intent, AUDIO_CAPTURE);
+            if (isAvailable(getApplicationContext(), intent)) {
+                startActivityForResult(intent,
+                        AUDIO_CAPTURE);
+            }else {
+                Toast.makeText(getApplicationContext(), "Mangler inbygget Audio recorder! ", Toast.LENGTH_LONG).show();
+            }
+
+            //startActivityForResult(intent, AUDIO_CAPTURE);
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
 
         }
@@ -676,8 +692,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return registrering;
     }
 
-
-
     public void showLoadingDialog() {
 
         if (progress == null) {
@@ -715,14 +729,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         return false;
     }
 
-    /*
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-    */
 
     public boolean isNetworkAvailable() {
         boolean status=false;

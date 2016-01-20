@@ -28,6 +28,7 @@ public class EIRApplication extends Application {
         SharedPreferences sp = getSharedPreferences("DTO", 0);
 
         JSONObject jsonData = new JSONObject();
+
         Log.d("CheckForData -->",sp.getString("data","no name defined"));
         try {
             jsonData = new JSONObject(sp.getString("data", "no name defined"));
@@ -87,7 +88,6 @@ public class EIRApplication extends Application {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         mEdit1.putString("data",dataDTO.toString());
         mEdit1.commit();
         Log.d("JsonObject check --->", dataDTO.toString());

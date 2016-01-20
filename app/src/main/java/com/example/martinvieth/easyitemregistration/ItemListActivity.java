@@ -35,8 +35,6 @@ public class ItemListActivity extends Activity {
             System.out.println("listens længde: " + itemsParsed.size());
 
             // Assign adapter to ListView
-
-
             listView.setOnItemClickListener(new OnItemClickListener() {
 
                 @Override
