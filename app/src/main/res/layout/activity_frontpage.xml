@@ -256,7 +256,6 @@
                 android:id="@+id/imageButtonCamera"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:adjustViewBounds="true"
                 android:background="@drawable/button"
                 android:gravity="center_vertical|center_horizontal"
                 android:src="@mipmap/ic_photo_camera"
