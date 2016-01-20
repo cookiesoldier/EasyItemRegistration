@@ -575,6 +575,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             protected void onPostExecute(Object result) {
                 deleteDataAndFiles();
                 JSONObject jsonData = new JSONObject();
+                if(itemData != null){
+
+
                 try {
                     jsonData = new JSONObject(itemData);
 
@@ -603,6 +606,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }else{
+                    Toast.makeText(getApplicationContext(),"Ingen forbindelse. Kunne ikke hente registreringen.",Toast.LENGTH_LONG).show();
                 }
             }
         }.execute(100);
