@@ -262,8 +262,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         if (v == btnCancel) {
             AlertDialog alertDialog = new AlertDialog.Builder(FrontPageActivity.this).create();
-            alertDialog.setTitle("Alert");
-            alertDialog.setMessage("Vil du ryde felterne");
+            alertDialog.setTitle("Warning");
+            alertDialog.setMessage("Vil du rydde felterne?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
