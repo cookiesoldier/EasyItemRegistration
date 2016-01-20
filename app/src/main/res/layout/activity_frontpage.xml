@@ -255,15 +255,14 @@
             <ImageView
                 android:id="@+id/imageButtonCamera"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_centerVertical="true"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-
-                android:background="#1277e3"
-                android:clickable="true"
-                android:src="@mipmap/cameraicon" />
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/button"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@mipmap/ic_photo_camera"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                />
 
             <LinearLayout
                 android:layout_width="0dp"
