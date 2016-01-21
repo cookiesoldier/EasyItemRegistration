@@ -333,8 +333,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             }else {
                 Toast.makeText(getApplicationContext(), "Mangler inbygget Audio recorder! ", Toast.LENGTH_LONG).show();
             }
-
-            //startActivityForResult(intent, AUDIO_CAPTURE);
             fileUri = getOutputMediaFileUri(MEDIA_TYPE_AUDIO);
 
         }
@@ -425,8 +423,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
 
         //hvis vi trykker hurtigt kan vi starte 2 async tasks, nok ikke så godt. :)
-
-
         if (v == btnSearch) {
             showLoadingDialog();
             if (isNetworkAvailable()) {
@@ -436,7 +432,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     @Override
                     protected Object doInBackground(Object... executeParametre) {
                         try {
-                            //   Log.d("Server response ----->", "The response" + (items = dataDAO.itemList()));
                             items = dataDAO.itemList();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -506,24 +501,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         //Vi prøver at gøre det med json objekter istedet.
         //først lægger vi string ind i et json object
 
-
         JSONArray jsonArrayData = new JSONArray(items);
         //System.out.println("ItemListParse(): jsonarray " + jsonArrayData.length());
         ArrayList<String> itemsParsed = new ArrayList<>();
         for (int i = 0; i < jsonArrayData.length(); i++) {
             final JSONObject dataPoint = jsonArrayData.getJSONObject(i);
-
-
             itemsParsed.add(dataPoint.get("itemid") + " " + dataPoint.get("itemheadline") + " " + dataPoint.get("defaultimage"));
-
-            // itemsParsed.add(jsonArrayData.getJSONObject(i).toString());
-            // Log.d("JsonObjects ----->", jsonArrayData.getJSONObject(i).toString());
         }
-
-
         return itemsParsed;
-
-
     }
 
     @Override
@@ -534,7 +519,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
                 Log.d("Audiorecording: ", data.getDataString());
-                //Log.d("Audiorecording: ", data.getExtras().toString());
                 Log.d("Audio-info ", fileUri.toString());
                 break;
 
@@ -564,7 +548,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             case ITEMLIST_CHOSEN:
                 String p = data.getExtras().getString("seletedItem");
                 Log.d("Choosen item  ----->", p);
-                //okay vi laver en variabel, hvis den er -1 så opretter vi et nyt item, ellers er den det itemNR vi opdaterer.
+                //hvis den er -1 så opretter vi et nyt item, ellers er den det itemNR vi opdaterer.
 
                 itemNrDeterminer = Integer.parseInt(p.split(" ")[0]);
                 insertDataFromChosenItem(itemNrDeterminer);
@@ -589,7 +573,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                     Log.d("reply database", "svar fra database." + itemData);
                     //Så skal vi sætte data ind i vores registreringsDTO som opbevarer den data vi arbejder med nu.
 
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -606,8 +589,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 deleteDataAndFiles();
                 JSONObject jsonData = new JSONObject();
                 if(itemData != null){
-
-
                 try {
                     jsonData = new JSONObject(itemData);
 

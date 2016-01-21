@@ -23,9 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//import static com.example.martinvieth.easyitemregistration.AudioRecorder.getOutputMediaFile;
 
 
+/*
+Denne klasse er inspireret af http://developer.android.com/guide/topics/media/audio-capture.html
+OBS: Klassen bruges ikke, da denne kan erstattes med blot et intent-kald, hvorfor klassen ikke er færdig
+Oprettet af Peter
+ */
 public class AudioRecorder extends Activity implements View.OnClickListener {
 
     Button btnStartRecord;
@@ -43,16 +47,12 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     public static final int AUDIO_SELECT = 66;
     String mFileName = null;
     String uniqueName = String.valueOf(System.currentTimeMillis());
-    //String uniqueName = String.valueOf(editAudioTitel.getText());
     MediaRecorder mRecorder = null;
     MediaPlayer mPlayer = null;
     private Uri fileUri;
     private File root;
     private ArrayList<File> audioList = new ArrayList<File>();
     ArrayList<Uri> selectedAudio = new ArrayList<>();
-
-    //Eventuel mulighed for at pause nuværende optagelse, således
-    //der kan optages ét langt lydklip, i stedet for flere små
 
     public ArrayList<File> getfile(File dir) {
         File listFile[] = dir.listFiles();
@@ -97,17 +97,7 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
 
         if (v == btnSave) {
-
-            //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            //Uri uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getPath());
-            //intent.setDataAndType(uri, "*/*");
-            //startActivityForResult(Intent.createChooser(intent, "Select Audiofiles"), 66);
-
-            //startActivity(new Intent(AudioRecorder.this, FrontPageActivity.class));
-            //intent.setType("audio/*");
-            //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            //intent.setAction(Intent.ACTION_GET_CONTENT);
-
+            //TODO
         }
 
         if (v == btnPlay) {
@@ -166,7 +156,6 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
     }
 
     public AudioRecorder() {
-        //getExternalStorageDirectory().getAbsolutePath()
         mFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).toString();
         mFileName += "/audio"+uniqueName+".3gp";
     }
@@ -223,31 +212,3 @@ public class AudioRecorder extends Activity implements View.OnClickListener {
         }
     }
 }
-
- /*  private static getOutputMediaFile(int type){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MUSIC), "EIR.Media");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("EIR.Media", "failed to create directory");
-                return null;
-            }
-        }
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "REC_" + timeStamp + ".3gp");
-        return mediaFile;
-    }
-
-    private Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
-    }
-*/

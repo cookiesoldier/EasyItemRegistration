@@ -45,30 +45,20 @@ public class CustomListAdapter2 extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-
-      //  if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.list_row_layout, null);
-            holder = new ViewHolder();
-            holder.headlineView = (TextView) convertView.findViewById(R.id.title);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.thumbImage);
-            convertView.setTag(holder);
-      //  } else {
-            holder = (ViewHolder) convertView.getTag();
-        //}
-
+        convertView = layoutInflater.inflate(R.layout.list_row_layout, null);
+        holder = new ViewHolder();
+        holder.headlineView = (TextView) convertView.findViewById(R.id.title);
+        holder.imageView = (ImageView) convertView.findViewById(R.id.thumbImage);
+        convertView.setTag(holder);
+        holder = (ViewHolder) convertView.getTag();
         holder.headlineView.setText(listData.get(position).toString().substring(0, listData.get(position).toString().lastIndexOf(" ")));
         String url = listData.get(position).toString().substring(listData.get(position).toString().lastIndexOf(" "), listData.get(position).toString().length());
         url = url.substring(1);
         if (!url.contains("null")) {
-            //Log.d("nrHeadUrl data--->", url);
-         //   Log.d("position if --->", Integer.toString(position)+ "---"+ holder.imageView.getId() + url);
             Picasso.with(context).load(url).placeholder(R.drawable.ic_placeholder).fit().into(holder.imageView);
         }else{
-          //  Log.d("position else--->" ,Integer.toString(position) + "---"+ holder.imageView.getId() + url);
             holder.imageView.setImageResource(R.drawable.ic_placeholder);
         }
-
-
         return convertView;
     }
 

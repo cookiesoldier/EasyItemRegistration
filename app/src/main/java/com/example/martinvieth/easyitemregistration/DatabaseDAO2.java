@@ -41,8 +41,6 @@ import java.util.List;
  */
 public class DatabaseDAO2 {
 
-
-    //String urlString = "http://78.46.187.172:4019";
     String urlString = "http://msondrup.dk/api/v1";
     String protString = "/?userID=56837dedd2d76438906140";
     Context frontPageActContext;
@@ -102,7 +100,6 @@ public class DatabaseDAO2 {
             //Check til at se hvad serveren svarer på vores request
             int response = urlConnection.getResponseCode();
             Log.d("Server response ----->", "The response is: " + response);
-
 
             in = new BufferedInputStream(urlConnection.getInputStream());
             responses = readStream(in);
@@ -314,7 +311,7 @@ public class DatabaseDAO2 {
 
         }
         try {
-/////// check for om det er en uri før du prøver at sende den, kommer nok til at give fejl men det er nok derfor!
+            // check for om det er en uri før du prøver at sende den, kommer nok til at give fejl men det er nok derfor!
             for (String uri : dataDTO.getImages()) {
                 Log.d("SendPicSoundTest--->",uri);
                 if(uri.contains("http://")){
@@ -342,7 +339,6 @@ public class DatabaseDAO2 {
                 }
 
                 //Send filen til databasen
-
                 url = new URL(urlString + "/items/" + dataDTO.getItemNr() + protString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 try {

@@ -25,9 +25,6 @@ public class ItemListActivity extends Activity {
         setContentView(R.layout.activity_item_list);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Intent intentExtras = getIntent();
-
-        //itemsListing = (ListView) findViewById(R.id.lVItems);
-
         ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
 
 
@@ -50,7 +47,6 @@ public class ItemListActivity extends Activity {
                     String itemValue = (String) listView.getItemAtPosition(position);
 
                     // Show Alert
-                   // Toast.makeText(getApplicationContext(), "  ListItem : " + itemValue, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent();
                     intent.putExtra("seletedItem", itemValue);
                     setResult(RESULT_OK, intent);
