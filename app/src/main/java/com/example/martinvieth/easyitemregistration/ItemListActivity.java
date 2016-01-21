@@ -25,6 +25,8 @@ public class ItemListActivity extends Activity {
         setContentView(R.layout.activity_item_list);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Intent intentExtras = getIntent();
+        
+
         ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
 
 
@@ -45,8 +47,7 @@ public class ItemListActivity extends Activity {
 
                     // ListView Clicked item value
                     String itemValue = (String) listView.getItemAtPosition(position);
-
-                    // Show Alert
+                    
                     Intent intent = new Intent();
                     intent.putExtra("seletedItem", itemValue);
                     setResult(RESULT_OK, intent);
