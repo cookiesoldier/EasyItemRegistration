@@ -533,6 +533,8 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
             case IMAGE_CAPTURE:
                 if(fileUri != null) {
                     selectedImages.add(fileUri.toString());
+                    Log.d("FILEURI", fileUri.toString());
+                    Log.d("FILEURI", selectedImages.toString());
                 } else Log.d("FILEURI", "URI VAR NULL");
                 selectedImagesShow();
                 break;

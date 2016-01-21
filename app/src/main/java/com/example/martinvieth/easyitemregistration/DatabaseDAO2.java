@@ -245,7 +245,7 @@ public class DatabaseDAO2 {
             urlConnection.disconnect();
 
             if (response == 200 || response == 201) {
-                sendPicSound(data);
+               Log.d("SendPicSound Test--->> ", Boolean.toString(sendPicSound(data)));
                 return true;
             } else {
                 return false;
@@ -314,22 +314,37 @@ public class DatabaseDAO2 {
             // check for om det er en uri før du prøver at sende den, kommer nok til at give fejl men det er nok derfor!
             for (String uri : dataDTO.getImages()) {
                 Log.d("SendPicSoundTest--->",uri);
-                if(uri.contains("http://")){
-                    continue;
-                }
-                //Så checker vi hvilken type filen er.
+                String type;
                 ContentResolver cR = frontPageActContext.getContentResolver();
-                String type = cR.getType(Uri.parse(uri));
+
+                if(uri.contains("http://")){
+                    Log.d("Skipped --->", uri);
+                    continue;
+                }else if(uri.contains("file://")){
+                    type ="image/jpg";
+                }else{
+                    //Så checker vi hvilken type filen er.
+
+                    type = cR.getType(Uri.parse(uri));
+                }
+
                 //Vi check er om filens type er en af dem som databasen kan bruge.
                 if (!Arrays.asList(okTypes).contains(type)) {
-                    Log.d("Error:FileType: ", type);
+                    System.out.println("Lorte if sætning.!"+type);
+                    Log.d("Error:FileType: ","type ="+ type);
                     return false;
                 }
+                Log.d("picture ---->", "test 55555");
+
                 //Gem billedet i byteArray
+                Log.d("picture ---->", "test 2222");
                 InputStream fileInputStream = cR.openInputStream(Uri.parse(uri));
+                Log.d("picture ---->", "test 23333");
                 byte[] bFile = new byte[fileInputStream.available()];
+                Log.d("ByteArrayCheck","------------------");
 
                 try {
+                    Log.d("picture ---->", "test -1");
                     //convert file into array of bytes
                     fileInputStream.read(bFile);
                     fileInputStream.close();
@@ -337,12 +352,13 @@ public class DatabaseDAO2 {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                Log.d("picture ---->", "test 0");
                 //Send filen til databasen
                 url = new URL(urlString + "/items/" + dataDTO.getItemNr() + protString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                Log.d("picture ---->", "test 1");
                 try {
-
+                    Log.d("picture ---->", "test 2");
                     urlConnection.setReadTimeout(10000 /* milliseconds */);
                     urlConnection.setConnectTimeout(15000 /* milliseconds */);
                     urlConnection.setRequestMethod("POST");
@@ -354,7 +370,7 @@ public class DatabaseDAO2 {
                     Log.d("File Byte Size --->", Integer.toString(bFile.length));
                     urlConnection.setRequestProperty("Content-Length", Integer.toString(bFile.length));
                     urlConnection.setUseCaches(false);
-
+                    Log.d("picture ---->", "test 3");
                     DataOutputStream wr = new DataOutputStream(urlConnection.getOutputStream());
                     wr.write(bFile);
                     //test slut
