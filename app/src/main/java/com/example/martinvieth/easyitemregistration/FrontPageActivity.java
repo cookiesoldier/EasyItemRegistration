@@ -14,6 +14,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -39,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -121,14 +123,43 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         btnGalleryPhoto.setImageResource(R.mipmap.ic_photo_library);
 
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "RobotoCondensed-Regular.ttf");
+
         edtItemHeadline = (EditText) findViewById(R.id.EditTextItemHeadline);
+        edtItemHeadline.setTypeface(typeface);
         edtBeskrivelse = (EditText) findViewById(R.id.editTextBeskrivelse);
+        edtBeskrivelse.setTypeface(typeface);
         edtRecieveDate = (EditText) findViewById(R.id.EditTextRecieveDate);
+        edtRecieveDate.setTypeface(typeface);
         edtDatingFrom = (EditText) findViewById(R.id.editTextDatingFrom);
+        edtDatingFrom.setTypeface(typeface);
         edtDatingTo = (EditText) findViewById(R.id.editTextDatingTo);
+        edtDatingTo.setTypeface(typeface);
         edtRefDonator = (EditText) findViewById(R.id.editTextRef_Donator);
+        edtRefDonator.setTypeface(typeface);
         edtTextRefProducer = (EditText) findViewById(R.id.editTextRef_Producer);
+        edtTextRefProducer.setTypeface(typeface);
         edtGeoArea = (EditText) findViewById(R.id.editTextGeoArea);
+        edtGeoArea.setTypeface(typeface);
+
+        TextView textView = (TextView) findViewById(R.id.textView);
+        TextView textView1 = (TextView) findViewById(R.id.textView1);
+        TextView textView2 = (TextView) findViewById(R.id.textView2);
+        TextView textView3 = (TextView) findViewById(R.id.textView3);
+        TextView textView4 = (TextView) findViewById(R.id.textView4);
+        TextView textView5 = (TextView) findViewById(R.id.textView5);
+        TextView textView6 = (TextView) findViewById(R.id.textView6);
+        TextView textView7 = (TextView) findViewById(R.id.textView7);
+        textView.setTypeface(typeface);
+        textView1.setTypeface(typeface);
+        textView2.setTypeface(typeface);
+        textView3.setTypeface(typeface);
+        textView4.setTypeface(typeface);
+        textView5.setTypeface(typeface);
+        textView6.setTypeface(typeface);
+        textView7.setTypeface(typeface);
+
+
 
         //Gør man ikke kan skrive i de 3 fleter med datoer fra datepicker.
         edtRecieveDate.setFocusable(false);
@@ -502,15 +533,14 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         switch (requestCode) {
             case AUDIO_CAPTURE:
                 selectedAudio.add(fileUri);
-                Log.d("Audiorecording: ", data.getExtras().toString());
+                Log.d("Audiorecording: ", data.getDataString());
+                //Log.d("Audiorecording: ", data.getExtras().toString());
                 Log.d("Audio-info ", fileUri.toString());
                 break;
 
             case IMAGE_CAPTURE:
                 selectedImages.add(fileUri.toString());
-
                 selectedImagesShow();
-
                 break;
 
             case IMAGE_SELECT:
@@ -540,7 +570,7 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 insertDataFromChosenItem(itemNrDeterminer);
                 break;
             default:
-                Log.d("Error", "Der kom et svar i onActivityResult der ikke er taget højde for." + requestCode);
+                Log.d("Error", "Der kom et svar i onActivityResult der ikke er taget højde for. reqCode: " + requestCode);
         }
 
     }
