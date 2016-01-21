@@ -23,10 +23,7 @@ public class ItemListActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_item_list);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Intent intentExtras = getIntent();
-
-        //itemsListing = (ListView) findViewById(R.id.lVItems);
 
         ArrayList<String> itemsParsed = intentExtras.getStringArrayListExtra("data");
 

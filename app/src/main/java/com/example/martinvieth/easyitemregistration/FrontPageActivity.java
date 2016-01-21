@@ -103,9 +103,6 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_frontpage);
 
-        //Burde gøre så skærmen ikke kan rotere
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         btnGalleryPhoto = (ImageView) findViewById(R.id.imageButtonCamerafolder);
         btnAccept = (ImageView) findViewById(R.id.imageButtonDone);
 
@@ -539,7 +536,9 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
                 break;
 
             case IMAGE_CAPTURE:
-                selectedImages.add(fileUri.toString());
+                if(fileUri != null) {
+                    selectedImages.add(fileUri.toString());
+                } else Log.d("FILEURI", "URI VAR NULL");
                 selectedImagesShow();
                 break;
 
