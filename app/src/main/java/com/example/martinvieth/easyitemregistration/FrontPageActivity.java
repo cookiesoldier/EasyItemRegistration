@@ -171,24 +171,17 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
 
         myGallery = (LinearLayout) findViewById(R.id.mygallery);
 
+
+
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
+/*
         EIRApplication EIRapp = (EIRApplication) getApplication();
         EIRapp.checkForData();
-
-
-    }
-
-    protected void onResume() {
-        super.onResume();
-        dismissLoadingDialog();
-
-        EIRApplication EIRapp = (EIRApplication) getApplication();
         if (EIRapp.getSelectedImages() != null && EIRapp.getSavedData() != null) {
             selectedImages = EIRapp.getSelectedImages();
             selectedImagesShow();
@@ -197,24 +190,42 @@ public class FrontPageActivity extends Activity implements View.OnClickListener 
         } else {
             Log.d("No previous data found", "NADADADADA");
         }
+
+*/
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+        dismissLoadingDialog();
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        EIRApplication EIRapp = (EIRApplication) getApplication();
-        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
-        EIRapp.setSelectedImages(selectedImages);
+
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
+/*
         EIRApplication EIRapp = (EIRApplication) getApplication();
+        EIRapp.setSavedData(getDataAndFiles(itemNrDeterminer));
+        EIRapp.setSelectedImages(selectedImages);
         EIRapp.saveEverything();
+        */
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     private void updateFieldsOnResume(RegistreringsDTO dataDTO) {
